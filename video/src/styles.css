@@ -50,6 +50,7 @@ body,
   padding: 0;
   width: 100%;
   height: 100%;
+  height: 100dvh;
   overflow: hidden;
   background: var(--surround);
   color: var(--ink);
@@ -57,6 +58,7 @@ body,
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   user-select: none;
+  touch-action: manipulation;
 }
 
 /* ============================================================================
@@ -68,6 +70,7 @@ body,
   flex-direction: column;
   width: 100vw;
   height: 100vh;
+  height: 100dvh;
   background:
     radial-gradient(ellipse 85% 70% at 50% 25%, #efe6d7 0%, var(--surround) 65%, var(--surround-deep) 100%);
   position: relative;
@@ -291,8 +294,11 @@ body,
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  padding: 28px 64px 24px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  padding: max(20px, env(safe-area-inset-top)) max(20px, env(safe-area-inset-right))
+    max(20px, env(safe-area-inset-bottom)) max(20px, env(safe-area-inset-left));
   background:
     radial-gradient(ellipse 76% 64% at 50% 26%, #fffdf8 0%, #f6f1e7 58%, #e9decb 100%);
   transition: opacity 0.45s cubic-bezier(0.22, 1, 0.36, 1), visibility 0.45s ease;
@@ -330,13 +336,15 @@ body,
   text-align: center;
   max-width: 1060px;
   width: 100%;
+  margin: auto 0;
+  padding: 6px 12px;
 }
 
 .overlay-eyebrow {
   font-family: var(--font-mono);
   font-size: 11px;
   font-weight: 600;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--sepia);
   margin-bottom: 10px;
@@ -348,8 +356,9 @@ body,
 }
 
 .overlay-shelf-wrap {
-  width: 632px;
-  height: 188px;
+  width: min(632px, 92vw);
+  aspect-ratio: 680 / 204;
+  height: auto;
   margin-bottom: 8px;
   display: flex;
   align-items: center;
@@ -357,8 +366,8 @@ body,
 }
 
 .overlay-shelf-svg {
-  width: 632px;
-  height: 188px;
+  width: 100%;
+  height: 100%;
   overflow: visible;
 }
 
@@ -367,19 +376,19 @@ body,
   font-family: var(--font-editorial);
   font-optical-sizing: auto;
   font-variation-settings: 'SOFT' 60, 'WONK' 1;
-  font-size: 58px;
+  font-size: clamp(32px, 5vw, 58px);
   font-weight: 600;
-  line-height: 1.03;
+  line-height: 1.04;
   letter-spacing: -0.025em;
   color: var(--ink);
 }
 
 .overlay-subtitle {
-  margin: 0 auto 20px;
+  margin: 0 auto 18px;
   max-width: 660px;
   font-family: var(--font-editorial);
   font-style: italic;
-  font-size: 19.5px;
+  font-size: clamp(15px, 2vw, 19.5px);
   font-weight: 400;
   line-height: 1.42;
   color: var(--sepia);
@@ -567,10 +576,11 @@ body,
 .timeline-wrap {
   position: relative;
   width: 100%;
-  height: 15px;
+  height: 22px;
   display: flex;
   align-items: center;
   cursor: pointer;
+  touch-action: none;
 }
 
 .timeline-segments {
@@ -1046,12 +1056,309 @@ body,
   margin: 0 !important;
 }
 
-/* Responsive compactness for narrow windows */
+/* ============================================================================
+   MOBILE PORTRAIT COMPANION PANEL (CRISP NATIVE CAPTIONS BELOW STAGE)
+   ========================================================================== */
+
+.mobile-companion {
+  display: none;
+}
+
+.cinema-app.is-mobile-portrait .stage-viewport {
+  flex: 0 0 auto;
+  padding: 0;
+  width: 100%;
+  background: var(--bg);
+}
+
+.cinema-app.is-mobile-portrait .stage-scaler {
+  border-radius: 0;
+  box-shadow: 0 4px 16px rgba(68, 50, 32, 0.14);
+}
+
+.cinema-app.is-mobile-portrait .caption-feather {
+  display: none;
+}
+
+.cinema-app.is-mobile-portrait .play-overlay {
+  position: fixed;
+  inset: 0 0 var(--hud-height) 0;
+}
+
+.cinema-app.is-mobile-portrait .mobile-companion {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  padding: 12px 16px 10px;
+  background: linear-gradient(180deg, #fbf8f1 0%, #f3ecdf 100%);
+  border-top: 1px solid var(--hairline);
+}
+
+.mobile-companion-hdr {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 8px;
+  flex-shrink: 0;
+}
+
+.mobile-companion-chapter {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  min-width: 0;
+}
+
+.mobile-chapter-title {
+  font-family: var(--font-editorial);
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mobile-fs-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  flex-shrink: 0;
+  padding: 5px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--hairline-strong);
+  background: rgba(255, 251, 242, 0.85);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 11.5px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.mobile-fs-btn svg {
+  width: 13px;
+  height: 13px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.mobile-caption-box {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 4px;
+}
+
+.mobile-caption-text {
+  margin: 0;
+  font-family: var(--font-editorial);
+  font-size: clamp(16px, 4.3vw, 19px);
+  line-height: 1.48;
+  text-align: center;
+  color: var(--ink);
+  transition: opacity 0.2s ease;
+}
+
+.mobile-caption-text.is-entering {
+  opacity: 0;
+}
+
+.mobile-caption-text .katex {
+  font-size: 0.94em;
+}
+
+.mobile-caption-track {
+  width: 100%;
+  height: 2px;
+  border-radius: 999px;
+  background: rgba(107, 94, 84, 0.14);
+  overflow: hidden;
+  flex-shrink: 0;
+  margin-top: 6px;
+}
+
+.mobile-caption-progress {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--brass), var(--terracotta));
+  transition: width 0.08s linear;
+}
+
+.mobile-companion-hint {
+  margin-top: 8px;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.03em;
+  color: var(--muted);
+  flex-shrink: 0;
+}
+
+/* ============================================================================
+   MOBILE LANDSCAPE & FULLSCREEN IMMERSIVE MODE (FLOATING AUTO-HIDE HUD)
+   ========================================================================== */
+
+.cinema-app.is-fullscreen {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  z-index: 9999;
+  background: var(--bg);
+}
+
+.cinema-app.is-mobile-landscape .stage-viewport,
+.cinema-app.is-fullscreen .stage-viewport {
+  padding: 0;
+  flex: 1 1 auto;
+  height: 100%;
+  background: var(--bg);
+}
+
+.cinema-app.is-mobile-landscape .stage-scaler,
+.cinema-app.is-fullscreen .stage-scaler {
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.cinema-app.is-mobile-landscape .cinema-hud,
+.cinema-app.is-fullscreen .cinema-hud {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: auto;
+  flex: 0 0 auto;
+  padding: 4px max(12px, env(safe-area-inset-right)) max(6px, env(safe-area-inset-bottom))
+    max(12px, env(safe-area-inset-left));
+  background: linear-gradient(180deg, rgba(242, 235, 220, 0.9), rgba(234, 224, 206, 0.97));
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.cinema-app.is-hud-hidden .cinema-hud {
+  opacity: 0;
+  transform: translateY(100%);
+  pointer-events: none;
+}
+
+.cinema-app.is-mobile-landscape .transcript-drawer,
+.cinema-app.is-fullscreen .transcript-drawer {
+  bottom: 0;
+  z-index: 10010;
+}
+
+/* Responsive compactness for narrow windows & mobile phones */
 @media (max-width: 960px) {
   .chapter-name {
     max-width: 160px;
   }
   .hud-btn-label {
+    display: none;
+  }
+}
+
+@media (max-width: 720px), (max-height: 540px) and (max-width: 1024px) {
+  :root {
+    --hud-height: 62px;
+  }
+
+  .overlay-frame-rule {
+    inset: 8px;
+  }
+
+  .overlay-actions {
+    gap: 10px;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+  }
+
+  .btn-play-hero {
+    padding: 12px 24px;
+    font-size: 15px;
+  }
+
+  .btn-secondary-hero {
+    padding: 11px 16px;
+    font-size: 13.5px;
+  }
+
+  .overlay-chapters {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px 8px;
+  }
+
+  .overlay-hint {
+    display: none;
+  }
+
+  .cinema-hud {
+    height: auto;
+    flex: 0 0 auto;
+    padding: 4px max(10px, env(safe-area-inset-right)) max(8px, env(safe-area-inset-bottom))
+      max(10px, env(safe-area-inset-left));
+    gap: 3px;
+  }
+
+  .hud-controls {
+    gap: 4px;
+    height: 34px;
+  }
+
+  .hud-group {
+    gap: 2px;
+  }
+
+  .hud-btn {
+    min-width: 30px;
+    height: 32px;
+    padding: 0 5px;
+  }
+
+  .hud-btn.btn-primary {
+    width: 34px;
+    height: 34px;
+  }
+
+  .speed-select {
+    height: 30px;
+    padding: 0 6px;
+    font-size: 10.5px;
+  }
+
+  .hud-chapter-indicator {
+    display: none;
+  }
+
+  .hud-time {
+    font-size: 10.5px;
+    padding: 0 4px;
+  }
+
+  .transcript-drawer {
+    max-width: 100vw;
+    width: 100%;
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+
+@media (max-width: 480px) {
+  .overlay-chapters {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .hud-time .sep,
+  .hud-time .total {
     display: none;
   }
 }

@@ -74,6 +74,8 @@ const ICONS = {
     '<svg viewBox="0 0 24 24"><path d="M4 6h16"/><path d="M4 12h16"/><path d="M4 18h10"/></svg>',
   fullscreen:
     '<svg viewBox="0 0 24 24"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M16 3h3a2 2 0 0 1 2 2v3"/><path d="M8 21H5a2 2 0 0 1-2-2v-3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg>',
+  exitFullscreen:
+    '<svg viewBox="0 0 24 24"><path d="M3 8h3a2 2 0 0 0 2-2V3"/><path d="M21 8h-3a2 2 0 0 1-2-2V3"/><path d="M3 16h3a2 2 0 0 1 2 2v3"/><path d="M21 16h-3a2 2 0 0 0-2 2v3"/></svg>',
   close: '<svg viewBox="0 0 24 24"><path d="M18 6L6 18"/><path d="M6 6l12 12"/></svg>',
 };
 
@@ -189,12 +191,19 @@ export class CinemaPlayer {
     this.isScrubbing = false;
     this._wasPlayingBeforeScrub = false;
 
+    this.isFullscreen = false;
+    this.isPseudoFullscreen = false;
+    this.isMobilePortrait = false;
+    this.isMobileLandscape = false;
+    this.hudHidden = false;
+
     this._frameCallbacks = new Set();
     this._rafId = null;
     this._lastRafTs = 0;
     this._resizeObserver = null;
     this._captionAnimTimer = null;
     this._transitionTimer = null;
+    this._hudHideTimer = null;
 
     // Precompute global timeline offsets from audio-measured durations
     this.sceneOffsets = [];
@@ -293,7 +302,7 @@ export class CinemaPlayer {
       .join('');
 
     this.mountEl.innerHTML = `
-      <div class="cinema-app">
+      <div class="cinema-app" id="cinema-app">
         <div class="stage-viewport" id="stage-viewport">
           <div class="stage-scaler" id="stage-scaler">
             <div class="stage-frame" id="stage-frame">
@@ -309,46 +318,66 @@ export class CinemaPlayer {
                 <p class="caption-text" id="caption-text"></p>
                 <div class="caption-beat-progress" id="caption-beat-progress"></div>
               </div>
+            </div>
+          </div>
 
-              <div class="play-overlay" id="play-overlay">
-                <div class="overlay-frame-rule"></div>
-                <div class="overlay-content">
-                  <div class="overlay-eyebrow">
-                    An Animated Mathematical Explainer<span>&middot;</span>${this.scenes.length} Chapters<span>&middot;</span>~${totalMins} min
-                  </div>
+          <div class="play-overlay" id="play-overlay">
+            <div class="overlay-frame-rule"></div>
+            <div class="overlay-content">
+              <div class="overlay-eyebrow">
+                An Animated Mathematical Explainer<span>&middot;</span>${this.scenes.length} Chapters<span>&middot;</span>~${totalMins} min
+              </div>
 
-                  <div class="overlay-shelf-wrap" id="overlay-shelf-wrap"></div>
+              <div class="overlay-shelf-wrap" id="overlay-shelf-wrap"></div>
 
-                  <h1 class="overlay-title">The Bottle Game</h1>
-                  <p class="overlay-subtitle">
-                    Six numbered bottles, one match count per move &mdash; and how two new algorithms beat the classic limits.
-                  </p>
+              <h1 class="overlay-title">The Bottle Game</h1>
+              <p class="overlay-subtitle">
+                Six numbered bottles, one match count per move &mdash; and how two new algorithms beat the classic limits.
+              </p>
 
-                  <div class="overlay-actions">
-                    <button class="btn-play-hero" id="btn-play-hero" type="button">
-                      ${ICONS.play}
-                      <span>Play Explainer</span>
-                    </button>
-                    <button class="btn-secondary-hero" id="btn-overlay-transcript" type="button">
-                      ${ICONS.transcript}
-                      <span>Chapters</span>
-                    </button>
-                  </div>
+              <div class="overlay-actions">
+                <button class="btn-play-hero" id="btn-play-hero" type="button">
+                  ${ICONS.play}
+                  <span>Play Explainer</span>
+                </button>
+                <button class="btn-secondary-hero" id="btn-overlay-transcript" type="button">
+                  ${ICONS.transcript}
+                  <span>Chapters</span>
+                </button>
+              </div>
 
-                  <div class="overlay-chapters" data-count="${this.scenes.length}">${chapterQuickBtns}</div>
-                  <div class="overlay-hint">
-                    <kbd>Space</kbd> Play/Pause &nbsp;&middot;&nbsp;
-                    <kbd>&larr;</kbd><kbd>&rarr;</kbd> Chapters &nbsp;&middot;&nbsp;
-                    <kbd>1</kbd>&ndash;<kbd>9</kbd><kbd>0</kbd><kbd>-</kbd><kbd>=</kbd> Jump &nbsp;&middot;&nbsp;
-                    <kbd>T</kbd> Chapters &nbsp;&middot;&nbsp;
-                    <kbd>M</kbd> SFX &nbsp;&middot;&nbsp;
-                    <kbd>V</kbd> Voice
-                  </div>
-                </div>
+              <div class="overlay-chapters" data-count="${this.scenes.length}">${chapterQuickBtns}</div>
+              <div class="overlay-hint">
+                <kbd>Space</kbd> Play/Pause &nbsp;&middot;&nbsp;
+                <kbd>&larr;</kbd><kbd>&rarr;</kbd> Chapters &nbsp;&middot;&nbsp;
+                <kbd>1</kbd>&ndash;<kbd>9</kbd><kbd>0</kbd><kbd>-</kbd><kbd>=</kbd> Jump &nbsp;&middot;&nbsp;
+                <kbd>T</kbd> Chapters &nbsp;&middot;&nbsp;
+                <kbd>M</kbd> SFX &nbsp;&middot;&nbsp;
+                <kbd>V</kbd> Voice
               </div>
             </div>
           </div>
         </div>
+
+        <section class="mobile-companion" id="mobile-companion" aria-label="Chapter narration">
+          <div class="mobile-companion-hdr">
+            <div class="mobile-companion-chapter">
+              <span class="whisper-num" id="mobile-chapter-num">01</span>
+              <span class="whisper-sep">&middot;</span>
+              <span class="mobile-chapter-title" id="mobile-chapter-name">The Bottle Game</span>
+            </div>
+            <button class="mobile-fs-btn" id="btn-mobile-fullscreen" title="Fullscreen" type="button">
+              ${ICONS.fullscreen}<span>Full View</span>
+            </button>
+          </div>
+          <div class="mobile-caption-box">
+            <p class="mobile-caption-text" id="mobile-caption-text"></p>
+          </div>
+          <div class="mobile-caption-track">
+            <div class="mobile-caption-progress" id="mobile-caption-progress"></div>
+          </div>
+          <div class="mobile-companion-hint">Tap video to play/pause &middot; Rotate for wide view</div>
+        </section>
 
         <aside class="transcript-drawer" id="transcript-drawer" aria-label="Chapters and Transcript">
           <div class="drawer-header">
@@ -397,7 +426,7 @@ export class CinemaPlayer {
               <button class="hud-btn" id="btn-transcript" title="Toggle Chapters Drawer (T)" type="button">
                 ${ICONS.transcript}<span class="hud-btn-label">Chapters</span>
               </button>
-              <button class="hud-btn" id="btn-fullscreen" title="Fullscreen (F)" type="button">
+              <button class="hud-btn" id="btn-fullscreen" title="Fullscreen (F)" aria-pressed="false" type="button">
                 ${ICONS.fullscreen}
               </button>
             </div>
@@ -406,6 +435,7 @@ export class CinemaPlayer {
       </div>
     `;
 
+    this.appEl = this.mountEl.querySelector('#cinema-app');
     this.viewportEl = this.mountEl.querySelector('#stage-viewport');
     this.scalerEl = this.mountEl.querySelector('#stage-scaler');
     this.stageFrameEl = this.mountEl.querySelector('#stage-frame');
@@ -415,6 +445,14 @@ export class CinemaPlayer {
     this.captionTextEl = this.mountEl.querySelector('#caption-text');
     this.captionProgressEl = this.mountEl.querySelector('#caption-beat-progress');
 
+    this.mobileCompanionEl = this.mountEl.querySelector('#mobile-companion');
+    this.mobileChapterNumEl = this.mountEl.querySelector('#mobile-chapter-num');
+    this.mobileChapterNameEl = this.mountEl.querySelector('#mobile-chapter-name');
+    this.mobileCaptionTextEl = this.mountEl.querySelector('#mobile-caption-text');
+    this.mobileCaptionProgressEl = this.mountEl.querySelector('#mobile-caption-progress');
+    this.btnMobileFullscreenEl = this.mountEl.querySelector('#btn-mobile-fullscreen');
+
+    this.hudEl = this.mountEl.querySelector('#cinema-hud');
     this.whisperNumEl = this.mountEl.querySelector('#whisper-num');
     this.whisperTitleEl = this.mountEl.querySelector('#whisper-title');
 
@@ -565,8 +603,15 @@ export class CinemaPlayer {
     if (typeof ResizeObserver !== 'undefined') {
       this._resizeObserver = new ResizeObserver(() => this._updateStageScale());
       this._resizeObserver.observe(this.viewportEl);
+      this._resizeObserver.observe(this.appEl);
     }
     window.addEventListener('resize', () => this._updateStageScale());
+    window.addEventListener('orientationchange', () => {
+      setTimeout(() => this._updateStageScale(), 80);
+    });
+    window.visualViewport?.addEventListener('resize', () => this._updateStageScale());
+    document.addEventListener('fullscreenchange', () => this._syncFullscreenState());
+    document.addEventListener('webkitfullscreenchange', () => this._syncFullscreenState());
 
     // Initial "Watch the Film" CTA (unlocks Web Audio cleanly)
     this.btnPlayHeroEl.addEventListener('click', () => {
@@ -592,6 +637,31 @@ export class CinemaPlayer {
       });
     });
 
+    // Stage tap-to-reveal HUD (landscape/fullscreen) or toggle play/pause
+    this.scalerEl.addEventListener('click', (e) => {
+      if (!this.overlayDismissed) return;
+      if (e.target.closest('button, a, input, select')) return;
+      audioEngine.unlock();
+      const overlayHud = this.isMobileLandscape || this.isFullscreen;
+      if (overlayHud && this.hudHidden) {
+        this._showHudTemporarily();
+        return;
+      }
+      this.togglePlay();
+      if (overlayHud) {
+        this._showHudTemporarily();
+      }
+    });
+
+    // Keep floating HUD awake while interacting with controls
+    ['pointerdown', 'touchstart', 'mousemove'].forEach((evt) => {
+      this.hudEl.addEventListener(evt, () => {
+        if (this.isMobileLandscape || this.isFullscreen) {
+          this._showHudTemporarily();
+        }
+      }, { passive: true });
+    });
+
     // HUD transport buttons
     this.btnPlayEl.addEventListener('click', () => {
       audioEngine.unlock();
@@ -607,17 +677,20 @@ export class CinemaPlayer {
     this.btnPrevEl.addEventListener('click', () => {
       audioEngine.unlock();
       this.prevScene();
+      this._showHudTemporarily();
     });
 
     this.btnNextEl.addEventListener('click', () => {
       audioEngine.unlock();
       this.nextScene();
+      this._showHudTemporarily();
     });
 
     this.btnSpeedEl.addEventListener('click', () => {
       const idx = SPEED_OPTIONS.indexOf(this.playbackRate);
       const nextRate = SPEED_OPTIONS[(idx + 1) % SPEED_OPTIONS.length];
       this.setSpeed(nextRate);
+      this._showHudTemporarily();
     });
 
     this.btnSfxEl.addEventListener('click', () => {
@@ -626,6 +699,7 @@ export class CinemaPlayer {
       audioEngine.setSfxEnabled(next);
       this._syncAudioButtons();
       if (next) audioEngine.bell(1.0);
+      this._showHudTemporarily();
     });
 
     this.btnVoiceEl.addEventListener('click', () => {
@@ -637,12 +711,20 @@ export class CinemaPlayer {
         const beat = this.sortedBeats[this.currentBeatIndex];
         audioEngine.syncVoice(beat, this.currentTime, true, this.playbackRate);
       }
+      this._showHudTemporarily();
     });
 
     this.btnTranscriptEl.addEventListener('click', () => this.setDrawerOpen(!this.drawerOpen));
     this.btnChapterPillEl.addEventListener('click', () => this.setDrawerOpen(!this.drawerOpen));
     this.btnCloseDrawerEl.addEventListener('click', () => this.setDrawerOpen(false));
-    this.btnFullscreenEl.addEventListener('click', () => this.toggleFullscreen());
+    this.btnFullscreenEl.addEventListener('click', () => {
+      audioEngine.unlock();
+      this.toggleFullscreen();
+    });
+    this.btnMobileFullscreenEl?.addEventListener('click', () => {
+      audioEngine.unlock();
+      this.toggleFullscreen();
+    });
 
     // Transcript drawer click handlers
     this.drawerBodyEl.addEventListener('click', (e) => {
@@ -794,18 +876,102 @@ export class CinemaPlayer {
     });
   }
 
+  _getViewportSize() {
+    const vv = window.visualViewport;
+    return {
+      vw: Math.round(vv?.width || window.innerWidth || document.documentElement.clientWidth || 1280),
+      vh: Math.round(vv?.height || window.innerHeight || document.documentElement.clientHeight || 720),
+    };
+  }
+
   _updateStageScale() {
-    if (!this.viewportEl || !this.scalerEl || !this.stageFrameEl) return;
+    if (!this.appEl || !this.viewportEl || !this.scalerEl || !this.stageFrameEl) return;
+
+    const nativeFs = Boolean(document.fullscreenElement || document.webkitFullscreenElement);
+    this.isFullscreen = nativeFs || this.isPseudoFullscreen;
+
+    const { vw, vh } = this._getViewportSize();
+    const isMobilePortrait = vw <= 768 && vh > vw && !this.isFullscreen;
+    const isMobileLandscape = vh <= 540 && vw > vh && vw <= 1024;
+
+    this.isMobilePortrait = isMobilePortrait;
+    this.isMobileLandscape = isMobileLandscape;
+
+    this.appEl.classList.toggle('is-mobile-portrait', isMobilePortrait);
+    this.appEl.classList.toggle('is-mobile-landscape', isMobileLandscape);
+    this.appEl.classList.toggle('is-fullscreen', this.isFullscreen);
+    this.appEl.classList.toggle('is-immersive', this.isPseudoFullscreen && !nativeFs);
+
+    // Force layout update so viewportEl dimensions reflect the toggled responsive mode
+    void this.viewportEl.offsetHeight;
     const rect = this.viewportEl.getBoundingClientRect();
-    const availW = Math.max(320, rect.width - 28);
-    const availH = Math.max(180, rect.height - 20);
-    const scale = Math.min(availW / STAGE_WIDTH, availH / STAGE_HEIGHT);
+
+    let scale;
+    let visibleStageH = STAGE_HEIGHT;
+
+    if (isMobilePortrait) {
+      // Edge-to-edge width; crop the bottom caption band (captions move into mobile companion)
+      const availW = Math.max(240, rect.width || vw);
+      const maxPortraitStageH = Math.max(200, vh * 0.46);
+      const croppedH = 602;
+      scale = Math.min(availW / STAGE_WIDTH, maxPortraitStageH / croppedH);
+      visibleStageH = croppedH;
+    } else if (isMobileLandscape || this.isFullscreen) {
+      const availW = Math.max(240, rect.width || vw);
+      const availH = Math.max(160, rect.height || vh);
+      scale = Math.min(availW / STAGE_WIDTH, availH / STAGE_HEIGHT);
+      visibleStageH = STAGE_HEIGHT;
+    } else {
+      const availW = Math.max(320, (rect.width || vw) - 28);
+      const availH = Math.max(180, (rect.height || vh) - 20);
+      scale = Math.min(availW / STAGE_WIDTH, availH / STAGE_HEIGHT);
+      visibleStageH = STAGE_HEIGHT;
+    }
+
     const scaledW = Math.round(STAGE_WIDTH * scale);
-    const scaledH = Math.round(STAGE_HEIGHT * scale);
+    const scaledH = Math.round(visibleStageH * scale);
 
     this.scalerEl.style.width = `${scaledW}px`;
     this.scalerEl.style.height = `${scaledH}px`;
     this.stageFrameEl.style.transform = `scale(${scale})`;
+
+    if (!(isMobileLandscape || this.isFullscreen)) {
+      this._clearHudHideTimer();
+      this._setHudHidden(false);
+    } else if (!this.hudHidden && this.isPlaying) {
+      this._scheduleHudHide();
+    }
+  }
+
+  _setHudHidden(hidden) {
+    this.hudHidden = Boolean(hidden);
+    this.appEl?.classList.toggle('is-hud-hidden', this.hudHidden);
+  }
+
+  _clearHudHideTimer() {
+    if (this._hudHideTimer) {
+      clearTimeout(this._hudHideTimer);
+      this._hudHideTimer = null;
+    }
+  }
+
+  _scheduleHudHide() {
+    this._clearHudHideTimer();
+    const overlayHud = this.isMobileLandscape || this.isFullscreen;
+    if (!overlayHud || !this.isPlaying || this.isScrubbing || this.drawerOpen || !this.overlayDismissed) {
+      this._setHudHidden(false);
+      return;
+    }
+    this._hudHideTimer = setTimeout(() => {
+      if ((this.isMobileLandscape || this.isFullscreen) && this.isPlaying && !this.isScrubbing && !this.drawerOpen && this.overlayDismissed) {
+        this._setHudHidden(true);
+      }
+    }, 3000);
+  }
+
+  _showHudTemporarily() {
+    this._setHudHidden(false);
+    this._scheduleHudHide();
   }
 
   _createSceneContext(manifestScene) {
@@ -1036,6 +1202,7 @@ export class CinemaPlayer {
     if (activeBeat) {
       audioEngine.syncVoice(activeBeat, this.currentTime, true, this.playbackRate);
     }
+    this._scheduleHudHide();
   }
 
   pause() {
@@ -1043,6 +1210,8 @@ export class CinemaPlayer {
     this.currentSceneInstance?.timeline?.pause();
     audioEngine.stopVoice();
     this._syncPlayButton();
+    this._clearHudHideTimer();
+    this._setHudHidden(false);
   }
 
   togglePlay() {
@@ -1113,16 +1282,84 @@ export class CinemaPlayer {
     this.btnTranscriptEl.classList.toggle('is-active', this.drawerOpen);
     if (this.drawerOpen) {
       this._scrollActiveBeatIntoView();
+      this._clearHudHideTimer();
+      this._setHudHidden(false);
+    } else {
+      this._scheduleHudHide();
     }
   }
 
-  toggleFullscreen() {
-    const target = this.mountEl.firstElementChild || document.documentElement;
-    if (!document.fullscreenElement) {
-      target.requestFullscreen?.().catch(() => {});
-    } else {
-      document.exitFullscreen?.().catch(() => {});
+  _syncFullscreenState() {
+    const nativeFs = Boolean(document.fullscreenElement || document.webkitFullscreenElement);
+    if (!nativeFs && !this.isPseudoFullscreen) {
+      try {
+        screen.orientation?.unlock?.();
+      } catch {
+        // Ignore unsupported orientation unlock
+      }
     }
+    this.isFullscreen = nativeFs || this.isPseudoFullscreen;
+    if (this.btnFullscreenEl) {
+      this.btnFullscreenEl.innerHTML = this.isFullscreen ? ICONS.exitFullscreen : ICONS.fullscreen;
+      this.btnFullscreenEl.title = this.isFullscreen ? 'Exit Fullscreen (F)' : 'Fullscreen (F)';
+      this.btnFullscreenEl.setAttribute('aria-pressed', String(this.isFullscreen));
+    }
+    if (this.btnMobileFullscreenEl) {
+      this.btnMobileFullscreenEl.innerHTML = this.isFullscreen
+        ? `${ICONS.exitFullscreen}<span>Exit</span>`
+        : `${ICONS.fullscreen}<span>Full View</span>`;
+    }
+    this._updateStageScale();
+    requestAnimationFrame(() => this._updateStageScale());
+  }
+
+  async toggleFullscreen() {
+    const nativeFs = Boolean(document.fullscreenElement || document.webkitFullscreenElement);
+    const currentlyFullscreen = nativeFs || this.isPseudoFullscreen;
+
+    if (!currentlyFullscreen) {
+      const target = this.appEl || this.mountEl.firstElementChild || document.documentElement;
+      const req = target.requestFullscreen || target.webkitRequestFullscreen;
+      let enteredNative = false;
+      if (typeof req === 'function') {
+        try {
+          await req.call(target);
+          enteredNative = Boolean(document.fullscreenElement || document.webkitFullscreenElement);
+        } catch {
+          enteredNative = false;
+        }
+      }
+      if (enteredNative) {
+        try {
+          screen.orientation?.lock?.('landscape')?.catch?.(() => {});
+        } catch {
+          // Ignore unsupported orientation lock
+        }
+      } else {
+        // iOS Safari / embedded WebView fallback: pin .cinema-app fullscreen in viewport
+        this.isPseudoFullscreen = true;
+      }
+    } else {
+      this.isPseudoFullscreen = false;
+      if (nativeFs) {
+        const exit = document.exitFullscreen || document.webkitExitFullscreen;
+        if (typeof exit === 'function') {
+          try {
+            await exit.call(document);
+          } catch {
+            // Ignore
+          }
+        }
+      }
+      try {
+        screen.orientation?.unlock?.();
+      } catch {
+        // Ignore
+      }
+    }
+
+    this._syncFullscreenState();
+    this._showHudTemporarily();
   }
 
   _globalToLocal(globalSec) {
@@ -1183,6 +1420,8 @@ export class CinemaPlayer {
     this.whisperTitleEl.textContent = title;
     this.hudChapterNumEl.textContent = numStr;
     this.hudChapterNameEl.textContent = title;
+    if (this.mobileChapterNumEl) this.mobileChapterNumEl.textContent = numStr;
+    if (this.mobileChapterNameEl) this.mobileChapterNameEl.textContent = title;
   }
 
   _findBeatAtTime(t) {
@@ -1202,6 +1441,8 @@ export class CinemaPlayer {
     if (!this.sortedBeats.length) {
       this.captionTextEl.innerHTML = '';
       this.captionProgressEl.style.width = '0%';
+      if (this.mobileCaptionTextEl) this.mobileCaptionTextEl.innerHTML = '';
+      if (this.mobileCaptionProgressEl) this.mobileCaptionProgressEl.style.width = '0%';
       return;
     }
 
@@ -1217,6 +1458,9 @@ export class CinemaPlayer {
     const beatDur = Math.max(0.2, nextStart - beatStart);
     const beatPct = Math.max(0, Math.min(100, ((t - beatStart) / beatDur) * 100));
     this.captionProgressEl.style.width = `${beatPct.toFixed(2)}%`;
+    if (this.mobileCaptionProgressEl) {
+      this.mobileCaptionProgressEl.style.width = `${beatPct.toFixed(2)}%`;
+    }
 
     if (activeIdx !== this.currentBeatIndex) {
       this.currentBeatIndex = activeIdx;
@@ -1230,11 +1474,20 @@ export class CinemaPlayer {
       if (immediate) {
         this.captionTextEl.classList.remove('is-entering');
         this.captionTextEl.innerHTML = rendered;
+        if (this.mobileCaptionTextEl) {
+          this.mobileCaptionTextEl.classList.remove('is-entering');
+          this.mobileCaptionTextEl.innerHTML = rendered;
+        }
       } else {
         this.captionTextEl.classList.add('is-entering');
         this.captionTextEl.innerHTML = rendered;
+        if (this.mobileCaptionTextEl) {
+          this.mobileCaptionTextEl.classList.add('is-entering');
+          this.mobileCaptionTextEl.innerHTML = rendered;
+        }
         this._captionAnimTimer = setTimeout(() => {
           this.captionTextEl.classList.remove('is-entering');
+          this.mobileCaptionTextEl?.classList.remove('is-entering');
         }, 24);
       }
 
@@ -1324,6 +1577,7 @@ export class CinemaPlayer {
       prevScene: () => this.prevScene(),
       dismissOverlay: () => this.dismissOverlay(true),
       toggleTranscript: (open) => this.setDrawerOpen(open == null ? !this.drawerOpen : open),
+      toggleFullscreen: () => this.toggleFullscreen(),
       getSceneCount: () => this.scenes.length,
       getSceneMeta: (idx) =>
         idx == null
@@ -1342,6 +1596,11 @@ export class CinemaPlayer {
         overlayVisible: !this.overlayDismissed,
         beatIndex: this.currentBeatIndex,
         hasVoiceManifest: Boolean(this.manifest),
+        isFullscreen: this.isFullscreen,
+        isPseudoFullscreen: this.isPseudoFullscreen,
+        isMobilePortrait: this.isMobilePortrait,
+        isMobileLandscape: this.isMobileLandscape,
+        hudHidden: this.hudHidden,
       }),
     };
   }
