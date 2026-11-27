@@ -1,0 +1,14 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+
+# OS / Editor
+.DS_Store
+
+# Explainer build artifacts & generated audio cache
+# (Published standalone explainer is committed at docs/index.html)
+video/node_modules/
+video/dist/
+video/src/audio/voice_manifest.json

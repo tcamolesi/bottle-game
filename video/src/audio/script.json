@@ -1,0 +1,919 @@
+{
+  "voice": "en-US-AndrewMultilingualNeural",
+  "rate": "-4%",
+  "leadInSeconds": 0.8,
+  "beatPauseSeconds": 0.55,
+  "outroTailSeconds": 1.2,
+  "scenes": [
+    {
+      "id": "scene1",
+      "number": 1,
+      "title": "The Bottle Game",
+      "chapter": "Prologue",
+      "beats": [
+        {
+          "id": "s1_b0",
+          "text": "Six numbered bottles, zero through five, stand on six slots. Underneath each slot lies a face-down coaster hiding a secret.",
+          "highlight": ["Six numbered bottles", "face-down coaster"],
+          "visualCue": "Sunlit 3D oak tabletop reveals six labeled glass bottles (0–5) standing on six brass-rimmed slots above six face-down veiled '?' coasters.",
+          "cue": null
+        },
+        {
+          "id": "s1_b1",
+          "text": "Those six hidden coasters hold a secret permutation of zero through five—here, [2, 0, 5, 3, 1, 4].",
+          "spoken": "Those six hidden coasters hold a secret permutation of zero through five—here, two, zero, five, three, one, four.",
+          "highlight": ["secret permutation", "[2, 0, 5, 3, 1, 4]"],
+          "visualCue": "Audience X-ray flip smoothly reveals the secret numbers beneath the six coasters: [2, 0, 5, 3, 1, 4].",
+          "cue": "whoosh"
+        },
+        {
+          "id": "s1_b2",
+          "text": "A bottle matches when its label equals the coaster beneath it. In your starting lineup, only Bottle 3 matches, scoring 1.",
+          "spoken": "A bottle matches when its label equals the coaster beneath it. In your starting lineup, only Bottle three matches, scoring one.",
+          "highlight": ["Bottle 3 matches", "scoring 1"],
+          "visualCue": "Slot 3 illuminates in warm gold showing Bottle 3 == Coaster 3 while the other five mismatch; score badge stamps f = 1.",
+          "cue": "bell"
+        },
+        {
+          "id": "s1_b3",
+          "text": "Of course, you cannot peek under the coasters. Swap Bottle 0 with Bottle 2, and the referee reports a new score: 2.",
+          "spoken": "Of course, you cannot peek under the coasters. Swap Bottle zero with Bottle two, and the referee reports a new score: two.",
+          "highlight": ["Swap Bottle 0 with Bottle 2", "new score: 2"],
+          "visualCue": "Coasters veil back to '?'; Bottle 0 and Bottle 2 lift in a smooth arc and swap to [2, 1, 0, 3, 4, 5], updating score to f = 2.",
+          "cue": "clink"
+        },
+        {
+          "id": "s1_b4",
+          "text": "That is the catch. The referee gives only the total match count—never which specific bottles are right—until all six match.",
+          "highlight": ["total match count", "never which specific bottles"],
+          "visualCue": "Subtle '?' halos pulse across all six slots while only the aggregate counter f = 2 remains visible.",
+          "cue": null
+        },
+        {
+          "id": "s1_b5",
+          "text": "This viral puzzle splits into two distinct games: Game 1 swaps a single pair per turn, while Game 2 reorders every bottle.",
+          "spoken": "This viral puzzle splits into two distinct games: Game one swaps a single pair per turn, while Game two reorders every bottle.",
+          "highlight": ["Game 1 swaps a single pair", "Game 2 reorders every bottle"],
+          "visualCue": "Split comparison banner: Game 1 performs one pairwise swap (0 <-> 2) while Game 2 lifts and reorders all six bottles at once.",
+          "cue": "whoosh"
+        },
+        {
+          "id": "s1_b6",
+          "text": "In Part I, we prove Game 1's exact swap limit and achieve it. In Part II, we break Game 2's n log n barrier.",
+          "spoken": "In Part one, we prove Game one's exact swap limit and achieve it. In Part two, we break Game two's n log n barrier.",
+          "highlight": ["Part I", "exact swap limit", "Part II", "n log n barrier"],
+          "visualCue": "Crisp 2-part editorial roadmap card previews Part I (Single Swap: Exact Theta(n^2)) and Part II (Full Reorder: O(n log log n)).",
+          "cue": "lock"
+        }
+      ]
+    },
+    {
+      "id": "scene2",
+      "number": 2,
+      "title": "Part I Roadmap & The Candidate Graph",
+      "chapter": "Part I · Setup",
+      "beats": [
+        {
+          "id": "s2_b0",
+          "text": "Part I has two goals: prove the exact minimum swaps Game 1 requires, then build an algorithm that hits that limit.",
+          "spoken": "Part one has two goals: prove the exact minimum swaps Game one requires, then build an algorithm that hits that limit.",
+          "highlight": ["two goals", "exact minimum swaps", "hits that limit"],
+          "visualCue": "Sunlit editorial Part I roadmap splits into Goal 1 (Lower Bounds) and Goal 2 (Optimal Algorithm).",
+          "cue": null
+        },
+        {
+          "id": "s2_b1",
+          "text": "Specifically, no deterministic strategy can beat 1/4 n² swaps, and no randomized strategy can beat 1/8 n² in expectation.",
+          "spoken": "Specifically, no deterministic strategy can beat one quarter n squared swaps, and no randomized strategy can beat one eighth n squared in expectation.",
+          "highlight": ["1/4 n²", "1/8 n²"],
+          "visualCue": "Target badges stamp Deterministic >= 1/4 n^2 and Randomized >= 1/8 n^2 cleanly with cream scrims.",
+          "cue": "bell"
+        },
+        {
+          "id": "s2_b2",
+          "text": "Our proof uses two building blocks. First, map every possible bottle-to-slot assignment onto an n×n candidate grid, or bipartite graph.",
+          "spoken": "Our proof uses two building blocks. First, map every possible bottle-to-slot assignment onto an n by n candidate grid, or bipartite graph.",
+          "highlight": ["two building blocks", "n×n candidate grid", "bipartite graph"],
+          "visualCue": "Six bottles above six veiled coasters morph cleanly into a 6x6 candidate grid alongside matching bipartite edges.",
+          "cue": "whoosh"
+        },
+        {
+          "id": "s2_b3",
+          "text": "Out of n² pairs, exactly n are true matches, and the remaining n(n−1) are wrong pairs.",
+          "spoken": "Out of n squared pairs, exactly n are true matches, and the remaining n times n minus one are wrong pairs.",
+          "highlight": ["n are true matches", "n(n−1) are wrong pairs"],
+          "visualCue": "Exactly n cells glow gold as the hidden true matching while the other n(n-1) cells tint softly as wrong pairs.",
+          "cue": null
+        },
+        {
+          "id": "s2_b4",
+          "text": "Physically placing a bottle on a slot tests that pair. Your starting row tests n pairs, and each swap moves two bottles.",
+          "highlight": ["Physically placing", "tests n pairs", "moves two bottles"],
+          "visualCue": "Diagonal cells light up as the n starting pairs; swapping Bottle 1 and Bottle 4 highlights exactly 2 fresh cells in the grid.",
+          "cue": "clink"
+        },
+        {
+          "id": "s2_b5",
+          "text": "So T swaps physically test at most n + 2T pairs. Yet winning places every bottle on its true coaster—covering all n matches.",
+          "spoken": "So T swaps physically test at most n plus two T pairs. Yet winning places every bottle on its true coaster—covering all n matches.",
+          "highlight": ["at most n + 2T pairs", "covering all n matches"],
+          "visualCue": "Balance equation compares Tested <= n + 2T against Final State = n True Matches + |Tested Wrong|.",
+          "cue": null
+        },
+        {
+          "id": "s2_b6",
+          "text": "Add every wrong pair you physically tested, cancel n from both sides, and swaps are at least half the tested wrong pairs.",
+          "highlight": ["cancel n", "at least half the tested wrong pairs"],
+          "visualCue": "The n terms strike out cleanly on both sides, locking Building Block 1: Swaps >= |Tested Wrong| / 2.",
+          "cue": "lock"
+        },
+        {
+          "id": "s2_b7",
+          "text": "That reduces our lower bound to one sharp question: how many wrong pairs must you physically test to win?",
+          "highlight": ["one sharp question", "how many wrong pairs"],
+          "visualCue": "Clean bridge card poses the exact question to Chapter 3: |Tested Wrong| >= ???",
+          "cue": null
+        }
+      ]
+    },
+    {
+      "id": "scene3",
+      "number": 3,
+      "title": "The Adversary's Escape Hatch",
+      "chapter": "Part I · Lower Bounds",
+      "beats": [
+        {
+          "id": "s3_b0",
+          "text": "Even against a generous referee answering yes or no per pair, an adversary plays by one rule: answer no unless every remaining secret forces yes.",
+          "highlight": ["generous referee", "answer no unless every remaining secret forces yes"],
+          "visualCue": "Face-down '?' coasters hover beneath an Adversary Rule plaque showing NO on every pair unless forced by uniqueness.",
+          "cue": "whoosh"
+        },
+        {
+          "id": "s3_b1",
+          "text": "Once you win, relabel each slot by its true bottle, so every untested wrong pair—Bottle u on Slot v—becomes a directed edge u → v.",
+          "spoken": "Once you win, relabel each slot by its true bottle, so every untested wrong pair—Bottle u on Slot v—becomes a directed edge u to v.",
+          "highlight": ["relabel each slot", "directed edge u → v"],
+          "visualCue": "Bipartite candidate grid folds cleanly into a directed graph on vertices 0..n-1 with arrows u -> v for untested wrong pairs.",
+          "cue": null
+        },
+        {
+          "id": "s3_b2",
+          "text": "On three slots with true coasters [0, 1, 2], suppose you never tested the cycle: Bottle 0 on 1, 1 on 2, and 2 on 0.",
+          "spoken": "On three slots with true coasters zero, one, two, suppose you never tested the cycle: Bottle zero on one, one on two, and two on zero.",
+          "highlight": ["[0, 1, 2]", "never tested the cycle"],
+          "visualCue": "Three slots with veiled coasters (X-ray [0, 1, 2]) display a glowing untested directed 3-cycle 0 -> 1 -> 2 -> 0.",
+          "cue": "bell"
+        },
+        {
+          "id": "s3_b3",
+          "text": "Because that cycle stayed open, the adversary never had to confirm [0, 1, 2]—switching coasters to [2, 0, 1] fits every answer.",
+          "spoken": "Because that cycle stayed open, the adversary never had to confirm zero, one, two—switching coasters to two, zero, one fits every answer.",
+          "highlight": ["switching coasters to [2, 0, 1]", "fits every answer"],
+          "visualCue": "Hidden coasters rotate smoothly from [0, 1, 2] to [2, 0, 1] along the untested cycle while every past check stays green.",
+          "cue": "clink"
+        },
+        {
+          "id": "s3_b4",
+          "text": "So the untested wrong pairs cannot contain any directed cycle: they must form a DAG. Topological order allows at most one forward edge per pair.",
+          "spoken": "So the untested wrong pairs cannot contain any directed cycle: they must form a DAG. Topological order allows at most one forward edge per pair.",
+          "highlight": ["must form a DAG", "Topological order"],
+          "visualCue": "Cycle edge snaps open; vertices align left-to-right in topological order where every remaining untested arc points strictly forward.",
+          "cue": "lock"
+        },
+        {
+          "id": "s3_b5",
+          "text": "That leaves at most n(n−1)/2 wrong pairs untested. Testing the other half and dividing by 2 forces 1/4 n² swaps.",
+          "spoken": "That leaves at most n times n minus one, over two, wrong pairs untested. Testing the other half and dividing by two forces one quarter n squared swaps.",
+          "highlight": ["n(n−1)/2 wrong pairs", "1/4 n² swaps"],
+          "visualCue": "Step-by-step arithmetic bar: |Tested Wrong| >= n(n-1)/2, then divide by 2 per swap -> Swaps >= n(n-1)/4 approx 1/4 n^2.",
+          "cue": "bell"
+        },
+        {
+          "id": "s3_b6",
+          "text": "For a random secret, pair each secret with its twin swapping coasters i and j: their first tested difference is wrong in one of the two twins.",
+          "highlight": ["twin swapping coasters i and j", "wrong in one of the two twins"],
+          "visualCue": "Side-by-side twin worlds pi and pi*(i j) show identical scores until the first differing edge hits—true in one twin, red wrong in the other.",
+          "cue": "whoosh"
+        },
+        {
+          "id": "s3_b7",
+          "text": "Summing half a wrong pair across all distinct coaster-pairs forces 1/8 n² expected swaps—which Yao's minimax locks in, since randomized algorithms mix deterministic ones.",
+          "spoken": "Summing half a wrong pair across all distinct coaster-pairs forces one eighth n squared expected swaps—which Yao's minimax locks in, since randomized algorithms mix deterministic ones.",
+          "highlight": ["1/8 n² expected swaps", "Yao's minimax"],
+          "visualCue": "Bound halves cleanly from 1/4 n^2 to 1/8 n^2 beside Yao's Minimax scale equating randomized worst-case to deterministic average-case.",
+          "cue": "lock"
+        },
+        {
+          "id": "s3_b8",
+          "text": "Yet the prior best algorithm, from a FUN 2026 paper, took 1/2 n² log n swaps. How do we cut every wasted repeat?",
+          "spoken": "Yet the prior best algorithm, from a Fun twenty twenty-six paper, took one half n squared log n swaps. How do we cut every wasted repeat?",
+          "highlight": ["FUN 2026 paper", "1/2 n² log n swaps", "cut every wasted repeat"],
+          "visualCue": "Comparison meter shows the gap between FUN 2026 (1/2 n^2 log n) and our exact limits (1/4 n^2 and 1/8 n^2).",
+          "cue": null
+        }
+      ]
+    },
+    {
+      "id": "scene4",
+      "number": 4,
+      "title": "The Four-Bottle Fold",
+      "chapter": "Part I · The Optimal Algorithm",
+      "beats": [
+        {
+          "id": "s4_b0",
+          "text": "To reach our lower bounds, every swap should test two brand-new pairs with zero repeats—and we must spot hits immediately.",
+          "highlight": ["two brand-new pairs", "zero repeats"],
+          "visualCue": "Goal banner displays 2 Fresh Pairs / Swap and 0 Wasted Repeats above four bottles and a clean 4x4 matrix.",
+          "cue": null
+        },
+        {
+          "id": "s4_b1",
+          "text": "First, clear initial matches in linear swaps so every unlocked bottle starts unmatched. Swapping a matched bottle always drops the score, since its coaster is already claimed.",
+          "highlight": ["clear initial matches", "always drops the score"],
+          "visualCue": "Pre-pass scans disjoint pairs; swapping a matched bottle off its coaster immediately drops score (delta < 0).",
+          "cue": "bell"
+        },
+        {
+          "id": "s4_b2",
+          "text": "A drop of 1 pinpoints a matched anchor via one third-slot probe. Testing each remaining slot against that anchor—then undoing—locks every initial match when score drops by 2.",
+          "spoken": "A drop of one pinpoints a matched anchor via one third-slot probe. Testing each remaining slot against that anchor—then undoing—locks every initial match when score drops by two.",
+          "highlight": ["matched anchor", "score drops by 2"],
+          "visualCue": "Anchor p probes remaining slots (delta = -2 locks initial matches, then undoes); unlocked bottles stand clean at score f = 0.",
+          "cue": "lock"
+        },
+        {
+          "id": "s4_b3",
+          "text": "Now take any even block of s unlocked bottles on a ring of s slots—starting with four bottles, zero through three.",
+          "highlight": ["even block of s unlocked bottles", "ring of s slots"],
+          "visualCue": "Four unlocked bottles (0, 1, 2, 3) arrange on a clean 4-slot ring beside an empty 4x4 coverage matrix.",
+          "cue": "whoosh"
+        },
+        {
+          "id": "s4_b4",
+          "text": "Their starting spots already tested the diagonal pairs. Naive swaps keep revisiting tested slots, wasting moves and causing that extra log n factor.",
+          "highlight": ["diagonal pairs", "Naive swaps", "extra log n factor"],
+          "visualCue": "Four diagonal cells fill in; a naive swap bounces a bottle back onto an already-tested cell stamped 'Repeat!'.",
+          "cue": "clink"
+        },
+        {
+          "id": "s4_b5",
+          "text": "Instead, alternate two ring reflections. Move A reflects outer-to-inner—on four bottles, 0 with 3 and 1 with 2—swapping pairs across one axis.",
+          "spoken": "Instead, alternate two ring reflections. Move A reflects outer-to-inner—on four bottles, zero with three and one with two—swapping pairs across one axis.",
+          "highlight": ["two ring reflections", "Move A", "0 with 3 and 1 with 2"],
+          "visualCue": "Reflection axis A bisects the 4-ring; swaps (0<->3) and (1<->2) yield [3, 2, 1, 0], lighting 4 brand-new cells in the 4x4 matrix.",
+          "cue": "clink"
+        },
+        {
+          "id": "s4_b6",
+          "text": "Move B reflects across the shifted axis—on four bottles, 0 with 1 and 2 with 3. Combining two reflections shifts every bottle two steps around the ring.",
+          "spoken": "Move B reflects across the shifted axis—on four bottles, zero with one and two with three. Combining two reflections shifts every bottle two steps around the ring.",
+          "highlight": ["Move B", "shifted axis", "two steps around the ring"],
+          "visualCue": "Shifted reflection axis B swaps (0<->1) and (2<->3) -> [2, 3, 0, 1], illustrating the +2 mod s dihedral rotation and lighting 4 more fresh cells.",
+          "cue": "clink"
+        },
+        {
+          "id": "s4_b7",
+          "text": "Alternating A and B visits all even- and odd-parity slots once each—all twelve off-diagonal pairs in six swaps, zero repeats. Next, let's watch it run live.",
+          "highlight": ["twelve off-diagonal pairs", "six swaps, zero repeats"],
+          "visualCue": "Final Move A -> [1, 0, 3, 2] fills the last 4 cells; 4x4 matrix gleams 100% covered with badge: 6 Swaps, 0 Repeats.",
+          "cue": "bell"
+        }
+      ]
+    },
+    {
+      "id": "scene5",
+      "number": 5,
+      "title": "Live Walkthrough: Trapping the Adversary",
+      "chapter": "Part I · Live Execution",
+      "beats": [
+        {
+          "id": "s5_b0",
+          "text": "Watch our algorithm run live on bottles [0, 1, 2, 3] over four veiled coasters—secretly [3, 2, 0, 1]—starting at score 0.",
+          "spoken": "Watch our algorithm run live on bottles zero, one, two, three over four veiled coasters—secretly three, two, zero, one—starting at score zero.",
+          "highlight": ["bottles [0, 1, 2, 3]", "secretly [3, 2, 0, 1]", "score 0"],
+          "visualCue": "Four bottles [0, 1, 2, 3] stand over four veiled '?' coasters (subtle audience X-ray peeks [3, 2, 0, 1]); referee meter reads f = 0.",
+          "cue": null
+        },
+        {
+          "id": "s5_b1",
+          "text": "Begin Move A by swapping Slots 0 and 3. Bottles become [3, 1, 2, 0], and the referee's score jumps from 0 to 1.",
+          "spoken": "Begin Move A by swapping Slots zero and three. Bottles become three, one, two, zero, and the referee's score jumps from zero to one.",
+          "highlight": ["swapping Slots 0 and 3", "jumps from 0 to 1"],
+          "visualCue": "Bottle 0 and Bottle 3 arc cleanly into [3, 1, 2, 0]; brass chime rings as referee score ticks 0 -> 1.",
+          "cue": "clink"
+        },
+        {
+          "id": "s5_b2",
+          "text": "Either Bottle 3 or Bottle 0 matched. Probe Slot 0 against idle Slot 1—known unmatched at score 0: score drops, proving Bottle 3 matched.",
+          "spoken": "Either Bottle three or Bottle zero matched. Probe Slot zero against idle Slot one—known unmatched at score zero: score drops, proving Bottle three matched.",
+          "highlight": ["Probe Slot 0 against idle Slot 1", "proving Bottle 3 matched"],
+          "visualCue": "Candidate halos blink over Slots 0 and 3; probe swap (Slot 0 <-> Slot 1) yields [1, 3, 2, 0] and drops f: 1 -> 0, lighting check on Bottle 3 @ Slot 0.",
+          "cue": "bell"
+        },
+        {
+          "id": "s5_b3",
+          "text": "Undo that probe and lock Bottle 3 on Slot 0, leaving three unlocked bottles—1, 2, 0—over hidden coasters [2, 0, 1].",
+          "spoken": "Undo that probe and lock Bottle three on Slot zero, leaving three unlocked bottles—one, two, zero—over hidden coasters two, zero, one.",
+          "highlight": ["lock Bottle 3 on Slot 0", "three unlocked bottles"],
+          "visualCue": "Swap undoes to [3, 1, 2, 0]; brass lock ring seals Bottle 3 onto Slot 0 while Slots 1–3 stay active.",
+          "cue": "lock"
+        },
+        {
+          "id": "s5_b4",
+          "text": "Swap Slots 1 and 2 for score 2, then 2 and 3: here all four match, while a score drop would expose Slot 2 instead.",
+          "spoken": "Swap Slots one and two for score two, then two and three: here all four match, while a score drop would expose Slot two instead.",
+          "highlight": ["Swap Slots 1 and 2", "all four match"],
+          "visualCue": "Swap (1 <-> 2) -> [3, 2, 1, 0] raises f = 2; swap (2 <-> 3) -> [3, 2, 0, 1] lights all four golden halos: f = 4/4.",
+          "cue": "clink"
+        },
+        {
+          "id": "s5_b5",
+          "text": "Flip the coasters face-up: [3, 2, 0, 1]. Every cycle is broken and no other coaster order fits our scores—the adversary is trapped.",
+          "spoken": "Flip the coasters face-up: three, two, zero, one. Every cycle is broken and no other coaster order fits our scores—the adversary is trapped.",
+          "highlight": ["[3, 2, 0, 1]", "adversary is trapped"],
+          "visualCue": "All four coasters flip face-up revealing [3, 2, 0, 1]; attempted adversary swaps flash red X contradictions.",
+          "cue": "bell"
+        },
+        {
+          "id": "s5_b6",
+          "text": "Now scale to n bottles. One giant n×n fold wastes 1/2 n² swaps, testing the full grid instead of shrinking as bottles lock.",
+          "spoken": "Now scale to n bottles. One giant n by n fold wastes one half n squared swaps, testing the full grid instead of shrinking as bottles lock.",
+          "highlight": ["giant n×n fold", "wastes 1/2 n² swaps"],
+          "visualCue": "Zoom out to an n x n grid shaded completely (1/2 n^2 swaps) vs the shrinking lower triangle.",
+          "cue": "whoosh"
+        },
+        {
+          "id": "s5_b7",
+          "text": "Instead, sweep b bottles across all m unlocked slots in b×b folds, swapping in untested spares on locks—forcing all b bottles to lock and shrinking m.",
+          "spoken": "Instead, sweep b bottles across all m unlocked slots in b by b folds, swapping in untested spares on locks—forcing all b bottles to lock and shrinking m.",
+          "highlight": ["b×b folds", "untested spares", "shrinking m"],
+          "visualCue": "A compact b x b block sweeps across m unlocked columns, deleting locked rows and columns to carve out only the lower triangle.",
+          "cue": null
+        },
+        {
+          "id": "s5_b8",
+          "text": "Each sweep takes mb/2 swaps—m/2 per bottle—integrating to 1/4 n²; b near √n balances setup and spare costs at O(n^{3/2}).",
+          "spoken": "Each sweep takes m times b over two swaps—m over two per bottle—integrating to one quarter n squared; b near square-root n balances setup and spare costs at order n to the three halves.",
+          "highlight": ["1/4 n²", "b near √n", "O(n^{3/2})"],
+          "visualCue": "Clean integral area under m/2 from 0 to n displays 1/4 n^2 while overhead pill shows setup O(n^2/b) + spares O(nb) = O(n^(3/2)) at b = sqrt(n).",
+          "cue": "lock"
+        },
+        {
+          "id": "s5_b9",
+          "text": "Shuffle the unlocked slot order per batch and every bottle locks halfway through on average, hitting 1/8 n²—closing FUN 2026! Now unlock Game 2.",
+          "spoken": "Shuffle the unlocked slot order per batch and every bottle locks halfway through on average, hitting one eighth n squared—closing Fun twenty twenty-six! Now unlock Game two.",
+          "highlight": ["Shuffle the unlocked slot order", "1/8 n²", "closing FUN 2026"],
+          "visualCue": "Shuffled columns halve the shaded triangle to 1/8 n^2, snapping shut the FUN 2026 gap and transitioning cleanly into Part II.",
+          "cue": "bell"
+        }
+      ]
+    },
+    {
+      "id": "scene6",
+      "number": 6,
+      "title": "Part II Roadmap: The No-Cloning Wall",
+      "chapter": "Part II · Full Reorder",
+      "beats": [
+        {
+          "id": "s6_b0",
+          "text": "Welcome to Game 2, where a single move lets you pick up and reorder all n bottles over the hidden coasters.",
+          "spoken": "Welcome to Game two, where a single move lets you pick up and reorder all n bottles over the hidden coasters.",
+          "highlight": ["Game 2", "reorder all n bottles"],
+          "visualCue": "All six bottles lift simultaneously above veiled coasters and land in a brand-new permutation in one fluid move.",
+          "cue": "whoosh"
+        },
+        {
+          "id": "s6_b1",
+          "text": "With n! secrets—roughly n log n bits—and n possible scores carrying up to log n bits each, information theory suggests linear time: O(n) queries.",
+          "spoken": "With n factorial secrets—roughly n log n bits—and n possible scores carrying up to log n bits each, information theory suggests linear time: order n queries.",
+          "highlight": ["n log n bits", "log n bits each", "O(n) queries"],
+          "visualCue": "Clean information-theory ratio card: log2(n!) approx n log n bits divided by log n bits/query -> Omega(n).",
+          "cue": null
+        },
+        {
+          "id": "s6_b2",
+          "text": "If you could clone bottles—putting copies of Bottle 0 across half the coasters—you could binary-search every bottle cleanly in parallel.",
+          "spoken": "If you could clone bottles—putting copies of Bottle zero across half the coasters—you could binary-search every bottle cleanly in parallel.",
+          "highlight": ["clone bottles", "copies of Bottle 0"],
+          "visualCue": "Playful ghost duplicates stamp Bottle 0 across Slots 0, 1, 2 to binary-search Coaster 0 in a single query.",
+          "cue": "clink"
+        },
+        {
+          "id": "s6_b3",
+          "text": "Classic Mastermind allows repeated colors like that, and Martinsson and Su proved in 2024 that repeated-color Mastermind indeed takes O(n) queries.",
+          "spoken": "Classic Mastermind allows repeated colors like that, and Martinsson and Su proved in twenty twenty-four that repeated-color Mastermind indeed takes order n queries.",
+          "highlight": ["repeated colors", "Martinsson and Su", "O(n) queries"],
+          "visualCue": "Editorial citation plaque displays Repeated-Color Mastermind: Theta(n) (Martinsson & Su, 2024).",
+          "cue": null
+        },
+        {
+          "id": "s6_b4",
+          "text": "Physical bottles hit a hard wall: no cloning. Every guess must be a strict permutation, using each bottle exactly once.",
+          "highlight": ["no cloning", "strict permutation"],
+          "visualCue": "Duplicate Bottle 0 copies dissolve under a crisp 'No Cloning — Strict S_n' brass seal; six unique bottles stand one per slot.",
+          "cue": "lock"
+        },
+        {
+          "id": "s6_b5",
+          "text": "Any random strict permutation averages just 1 match—a Poisson(1) score carrying under 2 bits, not log n—stalling static and naive solvers at O(n log n).",
+          "spoken": "Any random strict permutation averages just one match—a Poisson one score carrying under two bits, not log n—stalling static and naive solvers at order n log n.",
+          "highlight": ["Poisson(1) score", "under 2 bits", "O(n log n)"],
+          "visualCue": "Poisson(1) histogram spikes sharply at 0 and 1 (entropy 1.88 bits) while complexity meter stalls along O(n log n).",
+          "cue": "bell"
+        },
+        {
+          "id": "s6_b6",
+          "text": "To beat n log n without cloning, we must engineer structured permutations whose scores span a wide range, packing up to log n bits per query.",
+          "highlight": ["structured permutations", "wide range", "up to log n bits"],
+          "visualCue": "Narrow Poisson(1) spike widens into a broad multi-outcome distribution unlocking high bits per query.",
+          "cue": "whoosh"
+        },
+        {
+          "id": "s6_b7",
+          "text": "Part II builds that in three steps: a coin-weighing trick, turning bottles into an additive scale to hit n log log n, and orienting closed loops.",
+          "spoken": "Part two builds that in three steps: a coin-weighing trick, turning bottles into an additive scale to hit n log log n, and orienting closed loops.",
+          "highlight": ["coin-weighing trick", "additive scale", "orienting closed loops"],
+          "visualCue": "Three-pillar Part II roadmap cards light up: (1) Coin Weighing, (2) Additive Bottle Scale -> O(n log log n), (3) Orienting Loops.",
+          "cue": null
+        }
+      ]
+    },
+    {
+      "id": "scene7",
+      "number": 7,
+      "title": "Building Block 1: The Coin-Weighing Scale",
+      "chapter": "Part II · Coin Weighing",
+      "beats": [
+        {
+          "id": "s7_b0",
+          "text": "Building Block 1 comes from a classic puzzle: five coins, zero through four—each 0g if real or 1g if counterfeit—on an exact summing scale.",
+          "spoken": "Building Block one comes from a classic puzzle: five coins, zero through four—each zero grams if real or one gram if counterfeit—on an exact summing scale.",
+          "highlight": ["five coins", "0g if real or 1g if counterfeit", "exact summing scale"],
+          "visualCue": "Precision center-pivoted antique brass scale appears beside five gold coins (0, 1, 2, 3, 4) with 0g Real vs 1g Counterfeit badges.",
+          "cue": "scale"
+        },
+        {
+          "id": "s7_b1",
+          "text": "Testing one coin at a time takes five weighings, yet four overlapping weighings identify all five. Suppose the hidden weights are [1, 0, 1, 1, 0].",
+          "spoken": "Testing one coin at a time takes five weighings, yet four overlapping weighings identify all five. Suppose the hidden weights are one, zero, one, one, zero.",
+          "highlight": ["four overlapping weighings", "[1, 0, 1, 1, 0]"],
+          "visualCue": "The 4x5 Lindström D_2 weighing matrix unfolds cleanly beside the scale while coins briefly preview secret weights (1, 0, 1, 1, 0).",
+          "cue": null
+        },
+        {
+          "id": "s7_b2",
+          "text": "Weigh four subsets: W₁={0,1,2,3,4} reads 3g; W₂={0,2} reads 2g; W₃={0,1,4} reads 1g; W₄={0,3,4} reads 2g.",
+          "spoken": "Weigh four subsets: W one, all five coins, reads three grams; W two, zero and two, reads two grams; W three, zero, one, four, reads one gram; W four, zero, three, four, reads two grams.",
+          "highlight": ["W₁={0,1,2,3,4} reads 3g", "W₂={0,2} reads 2g", "W₃={0,1,4} reads 1g", "W₄={0,3,4} reads 2g"],
+          "visualCue": "Four coin subsets land in sequence on the brass pan; the center-pivoted needle smoothly swings to 3g, 2g, 1g, and 2g as each row logs.",
+          "cue": "scale"
+        },
+        {
+          "id": "s7_b3",
+          "text": "Now compute W₃ + W₄ − W₁ + W₂. Coins 1, 2, and 3 cancel out cleanly, leaving strictly 2c₀ + c₄.",
+          "spoken": "Now compute W three plus W four minus W one plus W two. Coins one, two, and three cancel out cleanly, leaving strictly two times coin zero plus coin four.",
+          "highlight": ["W₃ + W₄ − W₁ + W₂", "2c₀ + c₄"],
+          "visualCue": "Explicit step-by-step algebra card cancels c1, c2, and c3 with clean strike-throughs, isolating 2*c0 + c4.",
+          "cue": "whoosh"
+        },
+        {
+          "id": "s7_b4",
+          "text": "Here, 1 + 2 − 3 + 2 = 2. Since 2c₀ is always even, parity mod 2 immediately reveals c₄ = 0.",
+          "spoken": "Here, one plus two minus three plus two equals two. Since two times coin zero is always even, parity mod two immediately reveals coin four equals zero.",
+          "highlight": ["1 + 2 − 3 + 2 = 2", "parity mod 2", "c₄ = 0"],
+          "visualCue": "Arithmetic evaluates 1 + 2 - 3 + 2 = 2; 'mod 2' badge snaps Coin 4 to 0g in crisp emerald.",
+          "cue": "lock"
+        },
+        {
+          "id": "s7_b5",
+          "text": "Subtract c₄ and divide by 2 to find c₀ = 1; then subtracting from W₂, W₃, and W₄ recovers coins 2, 1, and 3.",
+          "spoken": "Subtract coin four and divide by two to find coin zero equals one; then subtracting from W two, W three, and W four recovers coins two, one, and three.",
+          "highlight": ["c₀ = 1", "recovers coins 2, 1, and 3"],
+          "visualCue": "Cascade fills in c0 = 1, c2 = 2 - 1 = 1, c1 = 1 - 1 - 0 = 0, c3 = 2 - 1 - 0 = 1 -> exact vector (1, 0, 1, 1, 0).",
+          "cue": "bell"
+        },
+        {
+          "id": "s7_b6",
+          "text": "Lindström's recursive matrix doubles weighings while more than doubling coins—pairing a block with its complement to peel extra coins mod 2, scaling from 5-in-4 to 449 coins in 128.",
+          "spoken": "Lindstrom's recursive matrix doubles weighings while more than doubling coins—pairing a block with its complement to peel extra coins mod two, scaling from five-in-four to four hundred forty-nine coins in one hundred twenty-eight.",
+          "highlight": ["Lindström's recursive matrix", "449 coins in 128"],
+          "visualCue": "Block matrix [D_k, D_k; D_k, 1-D_k] expands visually from D_2 (5 in 4) up to Lindström D_7: 128 weighings solve 449 coins.",
+          "cue": "whoosh"
+        },
+        {
+          "id": "s7_b7",
+          "text": "Asymptotically, that compresses m binary tests down to O(m / log m) weighings. Now: how do we turn physical bottles into a weighing scale?",
+          "spoken": "Asymptotically, that compresses m binary tests down to order m over log m weighings. Now: how do we turn physical bottles into a weighing scale?",
+          "highlight": ["O(m / log m) weighings", "physical bottles into a weighing scale"],
+          "visualCue": "Compression badge stamps O(m / log m) beside a bridge visual morphing gold coins into numbered glass bottles.",
+          "cue": null
+        }
+      ]
+    },
+    {
+      "id": "scene8",
+      "number": 8,
+      "title": "Building Block 2: Bottles as a Weighing Scale",
+      "chapter": "Part II · Additive Pairs",
+      "beats": [
+        {
+          "id": "s8_b0",
+          "text": "To build a weighing scale out of physical bottles, start by shuffling full permutations until the referee reports score 0.",
+          "spoken": "To build a weighing scale out of physical bottles, start by shuffling full permutations until the referee reports score zero.",
+          "highlight": ["shuffling full permutations", "score 0"],
+          "visualCue": "Six bottles shuffle quickly over veiled coasters until referee bell chimes f = 0.",
+          "cue": "whoosh"
+        },
+        {
+          "id": "s8_b1",
+          "text": "Roughly 1/e—about 37%—of random permutations have zero matches, so finding this random zero-match baseline p₀ takes under three queries on average.",
+          "spoken": "Roughly one over e—about thirty-seven percent—of random permutations have zero matches, so finding this random zero-match baseline p zero takes under three queries on average.",
+          "highlight": ["1/e", "37%", "zero-match baseline p₀"],
+          "visualCue": "Clean probability badge marks P(f = 0) approx 1/e = 36.8% (~2.72 tries); p_0 reference stamp locks.",
+          "cue": "bell"
+        },
+        {
+          "id": "s8_b2",
+          "text": "Lock p₀ in mind as our clean reference lineup: right now, not a single bottle matches the hidden coaster directly beneath it.",
+          "spoken": "Lock p zero in mind as our clean reference lineup: right now, not a single bottle matches the hidden coaster directly beneath it.",
+          "highlight": ["clean reference lineup", "not a single bottle matches"],
+          "visualCue": "Zero-score baseline markers ('0') settle cleanly beneath all six slots, confirming zero background noise.",
+          "cue": "lock"
+        },
+        {
+          "id": "s8_b3",
+          "text": "Now swap just one pair of slots, i and j, on top of p₀, leaving every other bottle untouched at score 0.",
+          "spoken": "Now swap just one pair of slots, i and j, on top of p zero, leaving every other bottle untouched at score zero.",
+          "highlight": ["swap just one pair", "untouched at score 0"],
+          "visualCue": "Pair (0 <-> 1) swaps cleanly on top of p_0 while Slots 2–5 stay dimmed at contribution 0.",
+          "cue": "clink"
+        },
+        {
+          "id": "s8_b4",
+          "text": "The new score equals that pair's weight: 0 if neither matches, 1 if one bottle hits its coaster, or 2 if both match each other's coasters.",
+          "spoken": "The new score equals that pair's weight: zero if neither matches, one if one bottle hits its coaster, or two if both match each other's coasters.",
+          "highlight": ["pair's weight", "0", "1", "2"],
+          "visualCue": "Three compact visual cases show w(i, j) = 0, 1, or 2 depending on how many of the two swapped bottles land on true coasters.",
+          "cue": null
+        },
+        {
+          "id": "s8_b5",
+          "text": "Here is the breakthrough: pick completely disjoint pairs—like (0↔1), (2↔3), and (4↔5)—so no slot appears in two pairs.",
+          "spoken": "Here is the breakthrough: pick completely disjoint pairs—like zero with one, two with three, and four with five—so no slot appears in two pairs.",
+          "highlight": ["completely disjoint pairs", "no slot appears in two pairs"],
+          "visualCue": "Three crisp non-overlapping brackets isolate pairs (0<->1), (2<->3), and (4<->5) with zero shared slots.",
+          "cue": "whoosh"
+        },
+        {
+          "id": "s8_b6",
+          "text": "Because disjoint pairs never overlap, toggling any subset of them on or off leaves untouched slots at zero—so the referee returns the exact sum of their weights!",
+          "highlight": ["toggling any subset", "exact sum of their weights"],
+          "visualCue": "Toggle switches activate pairs (0<->1) and (4<->5) together while (2<->3) stays off; a brass scale readout snaps to w(0,1) + w(4,5).",
+          "cue": "scale"
+        },
+        {
+          "id": "s8_b7",
+          "text": "Each disjoint pair is now a coin, and our bottle table is an exact weighing scale. Next: let's use it to break n log n.",
+          "highlight": ["Each disjoint pair is now a coin", "exact weighing scale"],
+          "visualCue": "Disjoint swap pairs transform visually into numbered coins resting on the brass scale pan, bridging to Chapter 9.",
+          "cue": "bell"
+        }
+      ]
+    },
+    {
+      "id": "scene9",
+      "number": 9,
+      "title": "Breaking n log n: Round-Robin & Parallel Halving",
+      "chapter": "Part II · Breaking n log n",
+      "beats": [
+        {
+          "id": "s9_b0",
+          "text": "On our zero-match baseline p₀—found in under three random tries, or deterministically in at most 2n queries—each off-coaster bottle adds 1 to the single pair linking its slot to its true coaster, so all pair weights across the table sum to exactly n.",
+          "spoken": "On our zero-match baseline p zero—found in under three random tries, or deterministically in at most two n queries—each off-coaster bottle adds one to the single pair linking its slot to its true coaster, so all pair weights across the table sum to exactly n.",
+          "highlight": ["baseline p₀", "at most 2n queries", "sum to exactly n"],
+          "visualCue": "Each bottle in p_0 draws one unique arrow to another slot holding its true coaster (+1 to that single pair); total weight across all C(n,2) pairs sums strictly to n.",
+          "cue": null
+        },
+        {
+          "id": "s9_b1",
+          "text": "To cover all n(n−1)/2 pairs, we never flip one pair at a time. Shuffle the slots and schedule a round-robin tournament of at most n full-table rounds—each single round is ONE move swapping all n/2 disjoint pairs at the exact same time!",
+          "spoken": "To cover all n times n minus one, over two, pairs, we never flip one pair at a time. Shuffle the slots and schedule a round-robin tournament of at most n full-table rounds—each single round is one move swapping all n over two disjoint pairs at the exact same time!",
+          "highlight": ["never flip one pair at a time", "ONE move", "all n/2 disjoint pairs"],
+          "visualCue": "Full-table animation shows all n bottles lifting and swapping across all n/2 disjoint pairs simultaneously in a single query, synchronized with polygon 1-factorization rounds 1..n-1.",
+          "cue": "whoosh"
+        },
+        {
+          "id": "s9_b2",
+          "text": "Querying a round moves every bottle simultaneously and returns the combined weight of all n/2 pairs in that round. Any round scoring 0 discards all n/2 of its pairs in ONE query; only nonzero rounds survive as active groups.",
+          "spoken": "Querying a round moves every bottle simultaneously and returns the combined weight of all n over two pairs in that round. Any round scoring zero discards all n over two of its pairs in one query; only nonzero rounds survive as active groups.",
+          "highlight": ["moves every bottle simultaneously", "discards all n/2 of its pairs in ONE query", "active groups"],
+          "visualCue": "Full-table round cards flash combined scores; f = 0 rounds stamp 'All n/2 pairs = 0!' and dissolve immediately while nonzero rounds enter the active queue.",
+          "cue": "bell"
+        },
+        {
+          "id": "s9_b3",
+          "text": "Over log₂ n binary-search levels, we halve every active group down to individual pairs—still never testing one pair at a time. Weighing one half-subset gives the other half by subtraction, and because positive integer weights still sum to n, at most n active groups survive at every level! Splitting them one by one would cost O(n log n).",
+          "spoken": "Over log base two of n binary-search levels, we halve every active group down to individual pairs—still never testing one pair at a time. Weighing one half-subset gives the other half by subtraction, and because positive integer weights still sum to n, at most n active groups survive at every level! Splitting them one by one would cost order n log n.",
+          "highlight": ["log₂ n binary-search levels", "at most n active groups survive at every level", "O(n log n)"],
+          "visualCue": "Binary split tree halves active groups (Right = Parent - Left) while a live invariant ribbon locks 'Sum of Weights = n => <= n Active Groups per Level'; sequential counter warns O(n log n).",
+          "cue": null
+        },
+        {
+          "id": "s9_b4",
+          "text": "Instead, treat each active group's chosen half-subset as a single super-coin in a slot-disjoint batch! Never freeze a rigid left half—which causes slot collisions—adaptively pick any half of a group's pairs whose slots remain free, so any subset of those m super-coins can be swapped simultaneously in one weighing for their exact combined weight.",
+          "spoken": "Instead, treat each active group's chosen half-subset as a single super-coin in a slot-disjoint batch! Never freeze a rigid left half—which causes slot collisions—adaptively pick any half of a group's pairs whose slots remain free, so any subset of those m super-coins can be swapped simultaneously in one weighing for their exact combined weight.",
+          "highlight": ["single super-coin", "adaptively pick any half", "swapped simultaneously"],
+          "visualCue": "Naive rigid halves flash red slot collision; adaptive selector picks free-slot pairs from each active group as non-overlapping 'Super-Coins' on the brass weighing scale.",
+          "cue": "clink"
+        },
+        {
+          "id": "s9_b5",
+          "text": "While a batch uses under a quarter of the table, over half of any randomly ordered group's pairs stay free—and at n/2ʳ slots per half, m = Θ(2ʳ) disjoint super-coins fit in a single Lindström batch!",
+          "spoken": "While a batch uses under a quarter of the table, over half of any randomly ordered group's pairs stay free—and at n over two to the r slots per half, m equals theta of two to the r disjoint super-coins fit in a single Lindstrom batch!",
+          "highlight": ["under a quarter of the table", "m = Θ(2ʳ) disjoint super-coins"],
+          "visualCue": "Table occupancy meter stays <= 25%; probability pill displays (3/4)^2 = 9/16 > 1/2 free pairs, packing m = Theta(2^r) disjoint super-coins into one Lindström batch.",
+          "cue": "lock"
+        },
+        {
+          "id": "s9_b6",
+          "text": "Weight-1 groups yield strict 0/1 super-coins decoded by Lindström's matrix, while weight-2-or-more groups—whose halves can weigh 0, 1, 2, or more—use sparse random subset weighings; both compress level r by the same log m factor.",
+          "spoken": "Weight-one groups yield strict zero-or-one super-coins decoded by Lindstrom's matrix, while weight-two-or-more groups—whose halves can weigh zero, one, two, or more—use sparse random subset weighings; both compress level r by the same log m factor.",
+          "highlight": ["0/1 super-coins", "sparse random subset weighings", "same log m factor"],
+          "visualCue": "Batch routes weight-1 super-coins into Lindström D_k and weight >= 2 multi-value super-coins into sparse random {0,1} weighings, both compressing level r by log m.",
+          "cue": "scale"
+        },
+        {
+          "id": "s9_b7",
+          "text": "Each batch of m = Θ(2ʳ) super-coins takes O(m / log m) queries—just O(1 / r) queries per active group—so halving all ≤ n active groups at level r costs only O(n / r) queries!",
+          "spoken": "Each batch of m equals theta of two to the r super-coins takes order m over log m queries—just order one over r queries per active group—so halving all at most n active groups at level r costs only order n over r queries!",
+          "highlight": ["O(m / log m) queries", "O(1 / r) queries per active group", "O(n / r) queries"],
+          "visualCue": "Compression algebra card shows m / log2(2^r) -> O(1/r) per group x (<= n groups) = O(n / r) at level r.",
+          "cue": "bell"
+        },
+        {
+          "id": "s9_b8",
+          "text": "Summing n/1, n/2, down to n/log n gives n times the harmonic sum of log n—proving an expected Big-O upper bound of O(n log log n) queries! Next: when do we stop weighing, and how do exact pair weights reveal the coasters?",
+          "spoken": "Summing n over one, n over two, down to n over log n gives n times the harmonic sum of log n—proving an expected Big-O upper bound of order n log log n queries! Next: when do we stop weighing, and how do exact pair weights reveal the coasters?",
+          "highlight": ["harmonic sum of log n", "Big-O upper bound of O(n log log n)"],
+          "visualCue": "Harmonic staircase bars step down n/1, n/2, n/3, ..., n/log n, summing cleanly into the glowing Big-O Upper Bound O(n log log n) theorem badge.",
+          "cue": "lock"
+        }
+      ]
+    },
+    {
+      "id": "scene10",
+      "number": 10,
+      "title": "Building Block 3: Graph, DFS & Parallel Loop Orientation",
+      "chapter": "Part II · Cycle Orientation",
+      "beats": [
+        {
+          "id": "s10_b0",
+          "text": "Stage 1—the stopping trigger: because every bottle sits off its one true coaster in p₀, all active pair weights across the table always sum to n. The instant our discovered single-pair weights add up to n, we know zero active pairs remain anywhere else—exiting coin weighing!",
+          "spoken": "Stage one—the stopping trigger: because every bottle sits off its one true coaster in p zero, all active pair weights across the table always sum to n. The instant our discovered single-pair weights add up to n, we know zero active pairs remain anywhere else—exiting coin weighing!",
+          "highlight": ["Stage 1—the stopping trigger", "add up to n", "exiting coin weighing"],
+          "visualCue": "4-Stage Pipeline header lights Stage 1; live weight accumulator climbs to Sum(w) == n, snapping a brass '0 Active Pairs Left -> Exit Weighing' gate.",
+          "cue": "bell"
+        },
+        {
+          "id": "s10_b1",
+          "text": "Stage 2—build the active-pair graph: draw an edge {i, j} between slots for every active pair we discovered, colored gold for weight 2 and slate for weight 1.",
+          "spoken": "Stage two—build the active-pair graph: draw an edge i, j between slots for every active pair we discovered, colored gold for weight two and slate for weight one.",
+          "highlight": ["Stage 2—build the active-pair graph", "gold for weight 2", "slate for weight 1"],
+          "visualCue": "Stage 2 illuminates; discovered active pairs materialize as graph edges {i, j} linking slot vertices—gold thick edges for w = 2 and crisp slate edges for w = 1.",
+          "cue": "whoosh"
+        },
+        {
+          "id": "s10_b2",
+          "text": "Every weight-2 edge is an isolated 2-cycle: swapping those two bottles puts both directly onto each other's true coasters, so we swap and lock every weight-2 pair right away.",
+          "spoken": "Every weight-two edge is an isolated two-cycle: swapping those two bottles puts both directly onto each other's true coasters, so we swap and lock every weight-two pair right away.",
+          "highlight": ["isolated 2-cycle", "swap and lock every weight-2 pair"],
+          "visualCue": "Weight-2 edge {0, 1} detaches as an isolated 2-cycle, swaps bottles immediately, and seals with golden lock rings.",
+          "cue": "lock"
+        },
+        {
+          "id": "s10_b3",
+          "text": "What about the weight-1 edges? Because all 2-cycles are already locked, every remaining unlocked slot's outgoing target and incoming bottle are two distinct neighbors—giving every unlocked slot exact degree 2.",
+          "spoken": "What about the weight-one edges? Because all two-cycles are already locked, every remaining unlocked slot's outgoing target and incoming bottle are two distinct neighbors—giving every unlocked slot exact degree two.",
+          "highlight": ["two distinct neighbors", "exact degree 2"],
+          "visualCue": "Zoom on an unlocked vertex highlights 1 outgoing target + 1 distinct incoming bottle = Exact Degree 2 (no self-loops, no 2-cycles).",
+          "cue": null
+        },
+        {
+          "id": "s10_b4",
+          "text": "Stage 3—identifying the loops: we never guess how many loops exist! Run standard depth-first search—connected components—on the weight-1 graph. Because every node has degree 2, DFS cleanly partitions the graph into exact, vertex-disjoint closed loops of length 3 or more.",
+          "spoken": "Stage three—identifying the loops: we never guess how many loops exist! Run standard depth-first search—connected components—on the weight-one graph. Because every node has degree two, D F S cleanly partitions the graph into exact, vertex-disjoint closed loops of length three or more.",
+          "highlight": ["Stage 3—identifying the loops", "depth-first search", "vertex-disjoint closed loops"],
+          "visualCue": "Stage 3 lights up; animated DFS tracer walks weight-1 edges step by step, coloring each closed connected component cleanly with zero guesswork.",
+          "cue": "whoosh"
+        },
+        {
+          "id": "s10_b5",
+          "text": "On a tiny six-bottle table, DFS might uncover just one 4-bottle loop. On a larger table—with dozens or thousands of bottles—the same DFS immediately exposes every separate loop at once: a 3-cycle, a 4-cycle, a 5-cycle, or many disjoint loops side by side.",
+          "spoken": "On a tiny six-bottle table, D F S might uncover just one four-bottle loop. On a larger table—with dozens or thousands of bottles—the same D F S immediately exposes every separate loop at once: a three-cycle, a four-cycle, a five-cycle, or many disjoint loops side by side.",
+          "highlight": ["one 4-bottle loop", "a 3-cycle, a 4-cycle, a 5-cycle", "many disjoint loops"],
+          "visualCue": "Split comparison shows Small n = 6 (1 loop of length 4) expanding smoothly to Large n = 12+ where DFS reveals a 3-cycle, 4-cycle, and 5-cycle simultaneously.",
+          "cue": "bell"
+        },
+        {
+          "id": "s10_b6",
+          "text": "Stage 4—orienting loops in parallel: each closed loop of length L has only two valid rotations—shift every bottle one step clockwise, or counter-clockwise. One orientation scores +L matches; the other scores 0.",
+          "spoken": "Stage four—orienting loops in parallel: each closed loop of length L has only two valid rotations—shift every bottle one step clockwise, or counter-clockwise. One orientation scores plus L matches; the other scores zero.",
+          "highlight": ["Stage 4—orienting loops in parallel", "scores +L matches", "scores 0"],
+          "visualCue": "Stage 4 lights up; curved arrows compare Clockwise (+L) vs Counter-Clockwise (0) on a closed loop, showing zero edge overlap for L >= 3.",
+          "cue": "clink"
+        },
+        {
+          "id": "s10_b7",
+          "text": "Because separate loops share zero slots, we can rotate MULTIPLE loops simultaneously in ONE full-table query on p₀! Group equal-length loops of size L, divide the referee's score by L, and feed them straight into Lindström coin weighing.",
+          "spoken": "Because separate loops share zero slots, we can rotate multiple loops simultaneously in one full-table query on p zero! Group equal-length loops of size L, divide the referee's score by L, and feed them straight into Lindstrom coin weighing.",
+          "highlight": ["share zero slots", "MULTIPLE loops simultaneously in ONE full-table query", "divide the referee's score by L"],
+          "visualCue": "Three disjoint loops rotate simultaneously in a single query on p_0; brass scale reads f = L * sum(b_j) and divides cleanly by L for binary Lindström decoding.",
+          "cue": "scale"
+        },
+        {
+          "id": "s10_b8",
+          "text": "Fewer than n / log n loops exceed length log n and can be tested directly, while all shorter loops compress in parallel via Lindström—orienting every single loop in O(n / log n) extra queries!",
+          "spoken": "Fewer than n over log n loops exceed length log n and can be tested directly, while all shorter loops compress in parallel via Lindstrom—orienting every single loop in order n over log n extra queries!",
+          "highlight": ["exceed length log n", "O(n / log n) extra queries"],
+          "visualCue": "Clean complexity split: Long loops (L > log n: < n/log n direct) + Short loops (L <= log n: parallel Lindström) -> Total O(n / log n) extra queries.",
+          "cue": "lock"
+        },
+        {
+          "id": "s10_b9",
+          "text": "All four stages connect with zero guesswork. Now let's watch every single move, score, and deduction execute live on six bottles!",
+          "spoken": "All four stages connect with zero guesswork. Now let's watch every single move, score, and deduction execute live on six bottles!",
+          "highlight": ["All four stages connect", "every single move, score, and deduction"],
+          "visualCue": "All four stage badges lock in sequence (1. Stop at Sum=n -> 2. Graph + Lock w=2 -> 3. DFS Loops -> 4. Parallel Orient), opening into the live 6-bottle walkthrough.",
+          "cue": "whoosh"
+        }
+      ]
+    },
+    {
+      "id": "scene11",
+      "number": 11,
+      "title": "Live Walkthrough: Every Move on Six Bottles",
+      "chapter": "Part II · Live Execution",
+      "beats": [
+        {
+          "id": "s11_b0",
+          "text": "Watch Game 2 solve six bottles, [0, 1, 2, 3, 4, 5], over veiled coasters—secretly [1, 0, 3, 4, 5, 2]. Move 1 queries [0, 1, 2, 3, 4, 5]: zero matches (f = 0), locking our clean baseline p₀!",
+          "spoken": "Watch Game two solve six bottles, zero, one, two, three, four, five, over veiled coasters—secretly one, zero, three, four, five, two. Move one queries zero, one, two, three, four, five: zero matches, locking our clean baseline p zero!",
+          "highlight": ["Move 1", "f = 0", "clean baseline p₀"],
+          "visualCue": "Live 6-bottle table [0, 1, 2, 3, 4, 5] over veiled '?' coasters (subtle audience X-ray [1, 0, 3, 4, 5, 2]); Move 1 logs f = 0 and locks baseline p_0.",
+          "cue": "bell"
+        },
+        {
+          "id": "s11_b1",
+          "text": "Now run all five full-table round-robin rounds—every single move swaps all six bottles at once! Move 2, Round 1, flips (0↔1), (2↔3), and (4↔5) simultaneously into [1, 0, 3, 2, 5, 4], scoring f = 4—active!",
+          "spoken": "Now run all five full-table round-robin rounds—every single move swaps all six bottles at once! Move two, Round one, flips zero with one, two with three, and four with five simultaneously into one, zero, three, two, five, four, scoring four—active!",
+          "highlight": ["swaps all six bottles at once", "Move 2, Round 1", "scoring f = 4"],
+          "visualCue": "All 6 bottles lift & swap simultaneously across (0<->1), (2<->3), (4<->5) into [1, 0, 3, 2, 5, 4]; Move Log stamps Move 2 (R1): f = 4 [ACTIVE].",
+          "cue": "clink"
+        },
+        {
+          "id": "s11_b2",
+          "text": "Move 3, Round 2, flips (0↔2), (1↔5), and (3↔4) all at once into [2, 5, 0, 4, 3, 1], scoring f = 1. Move 4, Round 3, flips (0↔3), (1↔4), and (2↔5) into [3, 4, 5, 0, 1, 2], also scoring f = 1!",
+          "spoken": "Move three, Round two, flips zero with two, one with five, and three with four all at once into two, five, zero, four, three, one, scoring one. Move four, Round three, flips zero with three, one with four, and two with five into three, four, five, zero, one, two, also scoring one!",
+          "highlight": ["Move 3, Round 2", "f = 1", "Move 4, Round 3"],
+          "visualCue": "Full-table simultaneous arcs animate Move 3 (R2: [2,5,0,4,3,1] -> f=1) then Move 4 (R3: [3,4,5,0,1,2] -> f=1), adding both to the active queue.",
+          "cue": "clink"
+        },
+        {
+          "id": "s11_b3",
+          "text": "Moves 5 and 6 run the last two full-table rounds: Round 4 flips (0↔4), (1↔2), (3↔5) into [4, 2, 1, 5, 0, 3], and Round 5 flips (0↔5), (1↔3), (2↔4) into [5, 3, 4, 1, 2, 0]. Both score f = 0—eliminating six dead pairs in just two moves!",
+          "spoken": "Moves five and six run the last two full-table rounds: Round four flips zero with four, one with two, three with five into four, two, one, five, zero, three, and Round five flips zero with five, one with three, two with four into five, three, four, one, two, zero. Both score zero—eliminating six dead pairs in just two moves!",
+          "highlight": ["Moves 5 and 6", "Both score f = 0", "eliminating six dead pairs"],
+          "visualCue": "Move 5 (R4: [4,2,1,5,0,3] -> f=0) and Move 6 (R5: [5,3,4,1,2,0] -> f=0) flash crisp strike-throughs eliminating all 6 dead pairs in 2 moves.",
+          "cue": "whoosh"
+        },
+        {
+          "id": "s11_b4",
+          "text": "Now split active Round 1 (sum = 4) with multi-pair weighings on p₀. Move 7 swaps {0, 1} and {2, 3} together—lineup [1, 0, 3, 2, 4, 5]—scoring f = 3, which immediately forces {4, 5} = 4 − 3 = 1!",
+          "spoken": "Now split active Round one, with sum four, using multi-pair weighings on p zero. Move seven swaps pairs zero-one and two-three together—lineup one, zero, three, two, four, five—scoring three, which immediately forces pair four-five equals four minus three, equals one!",
+          "highlight": ["Move 7", "scoring f = 3", "{4, 5} = 4 − 3 = 1"],
+          "visualCue": "Bottles swap {0,1} and {2,3} simultaneously on p_0 ([1,0,3,2,4,5]) while 4 & 5 rest untouched; scale reads f = 3 -> deduction badge locks w({4,5}) = 4 - 3 = 1.",
+          "cue": "scale"
+        },
+        {
+          "id": "s11_b5",
+          "text": "Move 8 swaps {0, 1} and {4, 5} together—lineup [1, 0, 2, 3, 5, 4]—again scoring f = 3. Subtracting from Round 1's total of 4 forces {2, 3} = 1, leaving {0, 1} = 4 − 1 − 1 = 2!",
+          "spoken": "Move eight swaps pairs zero-one and four-five together—lineup one, zero, two, three, five, four—again scoring three. Subtracting from Round one's total of four forces pair two-three equals one, leaving pair zero-one equals four minus one minus one, equals two!",
+          "highlight": ["Move 8", "{2, 3} = 1", "{0, 1} = 4 − 1 − 1 = 2"],
+          "visualCue": "Bottles swap {0,1} and {4,5} together ([1,0,2,3,5,4]) -> f = 3; algebra cascade locks w({2,3}) = 1 and w({0,1}) = 4 - 1 - 1 = 2 in gold.",
+          "cue": "scale"
+        },
+        {
+          "id": "s11_b6",
+          "text": "Move 9 decodes Rounds 2 & 3 in parallel! Swapping disjoint {3, 4} and {2, 5} ([0, 1, 5, 4, 3, 2]) scores f = 2, forcing {3, 4} = 1, {2, 5} = 1, and zeroing the other 4 pairs. (Scoring 0 drops both; scoring 1 takes one follow-up split.)",
+          "spoken": "Move nine decodes Rounds two and three in parallel in one move! Pick one slot-disjoint pair from each weight-one round—here three-four from Round two and two-five from Round three—and swap both together into zero, one, five, four, three, two, which happens to score two. Since neither round exceeds one, this forces three-four equals one, two-five equals one, and zeroes the other four pairs! Had it scored zero, both would drop out so we'd keep halving; a score of one would take one follow-up weighing to separate them.",
+          "highlight": ["Move 9", "in parallel", "{3, 4} = 1, {2, 5} = 1"],
+          "visualCue": "Move 9 swaps disjoint {3,4} (from R2) + {2,5} (from R3) simultaneously ([0,1,5,4,3,2]) -> f = 2; cap-1 deduction locks both to 1 and crosses out the 4 remaining pairs in R2 & R3.",
+          "cue": "bell"
+        },
+        {
+          "id": "s11_b7",
+          "text": "Check the stopping trigger: add our five discovered weights—2 + 1 + 1 + 1 + 1 = 6 = n! That guarantees zero active pairs remain anywhere else, cleanly transitioning to the graph stage.",
+          "spoken": "Check the stopping trigger: add our five discovered weights—two plus one plus one plus one plus one equals six, equals n! That guarantees zero active pairs remain anywhere else, cleanly transitioning to the graph stage.",
+          "highlight": ["stopping trigger", "2 + 1 + 1 + 1 + 1 = 6 = n", "graph stage"],
+          "visualCue": "Discovered pair cards total 2 + 1 + 1 + 1 + 1 = 6 == n; golden 'STOP WEIGHING -> BUILD GRAPH' gate unlocks smoothly.",
+          "cue": "lock"
+        },
+        {
+          "id": "s11_b8",
+          "text": "Weight-2 edge {0, 1} locks immediately—swap Bottles 0 and 1 to seal [1, 0]. Draw the four weight-1 edges {2, 3}, {3, 4}, {4, 5}, {5, 2} and run DFS: walking 2 — 3 — 4 — 5 — 2 exposes one closed 4-bottle loop (whereas larger n can yield 2, 3, or dozens of disjoint loops oriented in parallel).",
+          "spoken": "Weight-two edge zero-one locks immediately—swap Bottles zero and one to seal one, zero. Draw the four weight-one edges—two-three, three-four, four-five, and five-two—and run D F S: walking two, three, four, five, back to two exposes one closed four-bottle loop, whereas larger n can yield two, three, or dozens of disjoint loops oriented in parallel.",
+          "highlight": ["Weight-2 edge {0, 1} locks", "run DFS", "one closed 4-bottle loop"],
+          "visualCue": "Bottles 0 & 1 lock into [1, 0]; active graph draws weight-1 edges and an animated DFS tracer walks 2-3-4-5-2, with a small inset noting large-n multi-loop decomposition.",
+          "cue": "whoosh"
+        },
+        {
+          "id": "s11_b9",
+          "text": "Move 10 orients the loop on baseline p₀: keep Slots 0 and 1 at [0, 1] and rotate the 4-loop clockwise—shifting bottles 2→3→4→5→2 into [0, 1, 5, 2, 3, 4]. The referee reports f = 0, ruling out clockwise and forcing counter-clockwise [3, 4, 5, 2]!",
+          "spoken": "Move ten orients the loop on baseline p zero: keep Slots zero and one at zero, one, and rotate the four-loop clockwise—shifting bottles two to three to four to five to two, into zero, one, five, two, three, four. The referee reports zero, ruling out clockwise and forcing counter-clockwise three, four, five, two!",
+          "highlight": ["Move 10", "[0, 1, 5, 2, 3, 4]", "forcing counter-clockwise [3, 4, 5, 2]"],
+          "visualCue": "Bottles shift clockwise along 2->3->4->5->2 to [0, 1, 5, 2, 3, 4]; referee stamps f = 0, crossing out CW and snapping CCW [3, 4, 5, 2] bright emerald.",
+          "cue": "clink"
+        },
+        {
+          "id": "s11_b10",
+          "text": "Combine locked [1, 0] with counter-clockwise [3, 4, 5, 2] for Move 11: submit [1, 0, 3, 4, 5, 2], and the referee chimes 6 of 6! All six coasters flip face-up—[1, 0, 3, 4, 5, 2]—solved with zero cloning. Now let's test how this scales to four thousand bottles!",
+          "spoken": "Combine locked one, zero with counter-clockwise three, four, five, two for Move eleven: submit one, zero, three, four, five, two, and the referee chimes six of six! All six coasters flip face-up—one, zero, three, four, five, two—solved with zero cloning. Now let's test how this scales to four thousand bottles!",
+          "highlight": ["Move 11", "6 of 6", "coasters flip face-up"],
+          "visualCue": "3D sunlit oak tabletop finale: all six bottles glide into [1, 0, 3, 4, 5, 2] (f = 6/6) and all six coasters flip face-up matching 1-to-1 beneath every bottle.",
+          "cue": "bell"
+        }
+      ]
+    },
+    {
+      "id": "scene12",
+      "number": 12,
+      "title": "Benchmarks, Literature & The Open Problem",
+      "chapter": "Epilogue",
+      "beats": [
+        {
+          "id": "s12_b0",
+          "text": "Does O(n log log n) actually beat n log n in practice? Benchmarks up to 4,000 bottles settle the question.",
+          "spoken": "Does order n log log n actually beat n log n in practice? Benchmarks up to four thousand bottles settle the question.",
+          "highlight": ["O(n log log n)", "4,000 bottles"],
+          "visualCue": "Warm sunlit editorial benchmark chart unfolds with clean gridlines scaling from n = 50 up to n = 4,000.",
+          "cue": "whoosh"
+        },
+        {
+          "id": "s12_b1",
+          "text": "Our full-reorder solver peels cleanly below n log n, using 37% fewer queries at 1,000 bottles—6,020 versus 9,575.",
+          "spoken": "Our full-reorder solver peels cleanly below n log n, using thirty-seven percent fewer queries at one thousand bottles—six thousand twenty versus nine thousand five hundred seventy-five.",
+          "highlight": ["37% fewer queries", "6,020 versus 9,575"],
+          "visualCue": "V2 curve separates cleanly below dashed O(n log n); frosted scrim callout at n = 1,000 stamps -37% (6,020 vs. 9,575).",
+          "cue": "bell"
+        },
+        {
+          "id": "s12_b2",
+          "text": "Across 4,000 bottles, queries divided by n log n keep falling, while queries divided by n log log n hold flat near 1.81—even on adversarial inputs.",
+          "spoken": "Across four thousand bottles, queries divided by n log n keep falling, while queries divided by n log log n hold flat near one point eight one—even on adversarial inputs.",
+          "highlight": ["keep falling", "hold flat near 1.81"],
+          "visualCue": "Ratio subplot displays Q/(n log2 n) falling 0.71 -> 0.55 while Q/(n log2 log2 n) rides flat at 1.81–1.83 across random & adversarial inputs.",
+          "cue": null
+        },
+        {
+          "id": "s12_b3",
+          "text": "Meanwhile, our randomized single-swap solver converges to 1.055 times Yao's exact n(n−1)/8 lower bound at 2,000 bottles, confirming the theory.",
+          "spoken": "Meanwhile, our randomized single-swap solver converges to one point zero five five times Yao's exact n times n minus one, over eight, lower bound at two thousand bottles, confirming the theory.",
+          "highlight": ["1.055 times", "n(n−1)/8 lower bound", "2,000 bottles"],
+          "visualCue": "Chart pivots to V1 scaling up to n = 2,000: Optimal Rand curve hugs 1.055x of the theoretical n(n-1)/8 line.",
+          "cue": "bell"
+        },
+        {
+          "id": "s12_b4",
+          "text": "On the research map, Ko and Teng set the 1986 n log n baseline, while Martinsson and Su reached linear time in 2024 using repeated colors.",
+          "spoken": "On the research map, Ko and Teng set the nineteen eighty-six n log n baseline, while Martinsson and Su reached linear time in twenty twenty-four using repeated colors.",
+          "highlight": ["Ko and Teng", "Martinsson and Su", "repeated colors"],
+          "visualCue": "Clean horizontal literature timeline highlights Ko & Teng (1986, O(n log n)) and Martinsson & Su (2024, Theta(n) with cloning).",
+          "cue": null
+        },
+        {
+          "id": "s12_b5",
+          "text": "Subercaseaux posed the viral local-swap game at FUN 2026; our work closes single-swap to exact quadratic constants and breaks strict full-reorder down to n log log n.",
+          "spoken": "Subercaseaux posed the viral local-swap game at Fun twenty twenty-six; our work closes single-swap to exact quadratic constants and breaks strict full-reorder down to n log log n.",
+          "highlight": ["FUN 2026", "exact quadratic constants", "n log log n"],
+          "visualCue": "Timeline advances to Subercaseaux (FUN 2026) and illuminates This Work: V1 Exact Theta(n^2) and V2 O(n log log n).",
+          "cue": "lock"
+        },
+        {
+          "id": "s12_b6",
+          "text": "Two formal proof steps remain for our full-reorder theorem: rigorous batch-packing concentration bounds across rounds, and replacing our integer-program decoder with a direct polynomial-time multi-match decoder.",
+          "highlight": ["batch-packing concentration bounds", "direct polynomial-time multi-match decoder"],
+          "visualCue": "Editorial transparency card lists the two formalization items cleanly on frosted cream scrim panels.",
+          "cue": null
+        },
+        {
+          "id": "s12_b7",
+          "text": "That leaves one open question: without cloning, can the physical full-reorder bottle game ever reach linear time—or is n log log n the limit?",
+          "highlight": ["one open question", "without cloning", "reach linear time"],
+          "visualCue": "Closing frame returns to the six numbered glass bottles (0–5) standing over matching golden coasters beneath a crisp O(n)? emblem.",
+          "cue": "clink"
+        }
+      ]
+    }
+  ]
+}
