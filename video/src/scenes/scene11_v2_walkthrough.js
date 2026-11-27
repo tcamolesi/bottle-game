@@ -18,7 +18,7 @@ export const sceneMeta = {
   number: 11,
   title: 'Live Walkthrough: Every Move on Six Bottles',
   chapter: 'Part II · Live Execution',
-  duration: 266.988,
+  duration: 265.668,
   beats: [
     {
       id: 's11_b0',
@@ -165,7 +165,7 @@ export function buildScene(rootEl, ctx) {
   const { gsap, THREE, createSvg, svgEl, bottles, onFrame } = ctx;
   const P = ctx.colors || bottles.PALETTE;
   const beats = ctx.beats && ctx.beats.length ? ctx.beats : sceneMeta.beats;
-  const totalDur = Math.max(ctx.duration || sceneMeta.duration, 266.988);
+  const totalDur = Number(ctx.duration) || sceneMeta.duration;
 
   const b0 = beatAt(beats, 0, 0.8, 18.312);
   const b1 = beatAt(beats, 1, 19.662, 19.512);

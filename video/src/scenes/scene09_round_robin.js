@@ -13,7 +13,7 @@ export const sceneMeta = {
   number: 9,
   title: 'Breaking n log n: Round-Robin & Parallel Halving',
   chapter: 'Part II · Breaking n log n',
-  duration: 179.08,
+  duration: 172.768,
   beats: [
     {
       id: 's9_b0',
@@ -114,7 +114,7 @@ export function buildScene(rootEl, ctx) {
   const { gsap, createSvg, svgEl, bottles } = ctx;
   const P = ctx.colors || bottles.PALETTE;
   const beats = ctx.beats && ctx.beats.length ? ctx.beats : sceneMeta.beats;
-  const totalDur = Math.max(ctx.duration || sceneMeta.duration, 179.08);
+  const totalDur = Number(ctx.duration) || sceneMeta.duration;
 
   const b0 = beatAt(beats, 0, 0.8, 18.144);
   const b1 = beatAt(beats, 1, 19.494, 20.352);

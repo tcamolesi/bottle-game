@@ -103,7 +103,7 @@ export function buildScene(rootEl, ctx) {
   const { gsap, createSvg, svgEl, createMathEl, bottles } = ctx;
   const P = ctx.colors || bottles.PALETTE;
   const beats = ctx.beats && ctx.beats.length ? ctx.beats : sceneMeta.beats;
-  const totalDur = Math.max(ctx.duration || sceneMeta.duration, 113.802);
+  const totalDur = Number(ctx.duration) || sceneMeta.duration;
 
   const b0 = beatAt(beats, 0, 0.8, 12.02);
   const b1 = beatAt(beats, 1, 13.37, 11.95);
