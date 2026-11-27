@@ -54,7 +54,7 @@ const BOTTLES_KIT = {
   getBottleColor,
 };
 
-const SPEED_OPTIONS = [0.75, 1, 1.25, 1.5];
+const SPEED_OPTIONS = [1, 1.25, 1.5, 2];
 
 const ICONS = {
   play: '<svg viewBox="0 0 24 24"><path d="M7.5 5.25L18.75 12L7.5 18.75V5.25Z"/></svg>',
