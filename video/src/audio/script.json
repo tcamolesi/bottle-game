@@ -597,9 +597,9 @@
         },
         {
           "id": "s9_b1",
-          "text": "To cover all n(n−1)/2 pairs, we never flip one pair at a time. Shuffle the slots and schedule a round-robin tournament of at most n full-table rounds—each single round is ONE move swapping all n/2 disjoint pairs at the exact same time!",
-          "spoken": "To cover all n times n minus one, over two, pairs, we never flip one pair at a time. Shuffle the slots and schedule a round-robin tournament of at most n full-table rounds—each single round is one move swapping all n over two disjoint pairs at the exact same time!",
-          "highlight": ["never flip one pair at a time", "ONE move", "all n/2 disjoint pairs"],
+          "text": "To cover all n(n−1)/2 pairs, shuffle the slots and schedule a round-robin tournament of at most n full-table rounds—each round swaps all n/2 disjoint pairs simultaneously in a single move.",
+          "spoken": "To cover all n times n minus one, over two, pairs, shuffle the slots and schedule a round-robin tournament of at most n full-table rounds—each round swaps all n over two disjoint pairs simultaneously in a single move.",
+          "highlight": ["round-robin tournament", "all n/2 disjoint pairs", "single move"],
           "visualCue": "Full-table animation shows all n bottles lifting and swapping across all n/2 disjoint pairs simultaneously in a single query, synchronized with polygon 1-factorization rounds 1..n-1.",
           "cue": "whoosh"
         },
@@ -613,8 +613,8 @@
         },
         {
           "id": "s9_b3",
-          "text": "Over log₂ n binary-search levels, we halve every active group down to individual pairs—still never testing one pair at a time. Weighing one half-subset gives the other half by subtraction, and because positive integer weights still sum to n, at most n active groups survive at every level! Splitting them one by one would cost O(n log n).",
-          "spoken": "Over log base two of n binary-search levels, we halve every active group down to individual pairs—still never testing one pair at a time. Weighing one half-subset gives the other half by subtraction, and because positive integer weights still sum to n, at most n active groups survive at every level! Splitting them one by one would cost order n log n.",
+          "text": "Over log₂ n binary-search levels, we halve every active group down to individual pairs. Weighing one half-subset gives the other half by subtraction, and because positive integer weights still sum to n, at most n active groups survive at every level. Splitting them sequentially would cost O(n log n).",
+          "spoken": "Over log base two of n binary-search levels, we halve every active group down to individual pairs. Weighing one half-subset gives the other half by subtraction, and because positive integer weights still sum to n, at most n active groups survive at every level. Splitting them sequentially would cost order n log n.",
           "highlight": ["log₂ n binary-search levels", "at most n active groups survive at every level", "O(n log n)"],
           "visualCue": "Binary split tree halves active groups (Right = Parent - Left) while a live invariant ribbon locks 'Sum of Weights = n => <= n Active Groups per Level'; sequential counter warns O(n log n).",
           "cue": null
@@ -765,9 +765,9 @@
         },
         {
           "id": "s11_b1",
-          "text": "Now run all five full-table round-robin rounds—every single move swaps all six bottles at once! Move 2, Round 1, flips (0↔1), (2↔3), and (4↔5) simultaneously into [1, 0, 3, 2, 5, 4], scoring f = 4—active!",
-          "spoken": "Now run all five full-table round-robin rounds—every single move swaps all six bottles at once! Move two, Round one, flips zero with one, two with three, and four with five simultaneously into one, zero, three, two, five, four, scoring four—active!",
-          "highlight": ["swaps all six bottles at once", "Move 2, Round 1", "scoring f = 4"],
+          "text": "Now run all five full-table round-robin rounds, each swapping all six bottles together. Move 2, Round 1, flips (0↔1), (2↔3), and (4↔5) into [1, 0, 3, 2, 5, 4], scoring f = 4—active.",
+          "spoken": "Now run all five full-table round-robin rounds, each swapping all six bottles together. Move two, Round one, flips zero with one, two with three, and four with five into one, zero, three, two, five, four, scoring four—active.",
+          "highlight": ["swapping all six bottles together", "Move 2, Round 1", "scoring f = 4"],
           "visualCue": "All 6 bottles lift & swap simultaneously across (0<->1), (2<->3), (4<->5) into [1, 0, 3, 2, 5, 4]; Move Log stamps Move 2 (R1): f = 4 [ACTIVE].",
           "cue": "clink"
         },

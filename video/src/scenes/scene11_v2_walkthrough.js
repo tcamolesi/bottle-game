@@ -34,8 +34,8 @@ export const sceneMeta = {
       start: 19.662,
       audioDuration: 19.512,
       end: 39.724,
-      text: 'Now run all five full-table round-robin rounds—every single move swaps all six bottles at once! Move 2, Round 1, flips (0↔1), (2↔3), and (4↔5) simultaneously into [1, 0, 3, 2, 5, 4], scoring f = 4—active!',
-      highlight: ['swaps all six bottles at once', 'Move 2, Round 1', 'scoring f = 4'],
+      text: 'Now run all five full-table round-robin rounds, each swapping all six bottles together. Move 2, Round 1, flips (0↔1), (2↔3), and (4↔5) into [1, 0, 3, 2, 5, 4], scoring f = 4—active.',
+      highlight: ['swapping all six bottles together', 'Move 2, Round 1', 'scoring f = 4'],
       cue: 'clink',
     },
     {
